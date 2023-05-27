@@ -1,0 +1,101 @@
+Makefile
+TODO.md
+a.out
+builtins.c
+builtins.o
+builtins2.c
+builtins2.o
+builtins3.c
+builtins3.o
+check_builtins.c
+check_builtins.o
+execute.c
+execute.o
+ft_split.c
+ft_split.o
+handle_variables.c
+handle_variables.o
+includes
+input.txt
+lst_utils.c
+lst_utils.o
+lst_utils2.c
+lst_utils2.o
+main.c
+main.o
+minishell
+parse_input.c
+parse_input.o
+path.c
+path.o
+pipe.c
+process_input.c
+process_input.o
+redirect.c
+redirect.o
+signals.c
+utils.c
+utils.o
+utils2.c
+utils2.o
+utils_path.c
+utils_path.o
+utilscalloc.c
+utilscalloc.o
+utilsflags.c
+utilsflags.o
+variables.c
+variables.o
+variables2.c
+variables2.o
+total 376
+-rw-r--r-- 1 pcocci 2022_firenze  1463 May 24 15:44 Makefile
+-rw-r--r-- 1 pcocci 2022_firenze   153 May 22 19:29 TODO.md
+-rwxr-xr-x 1 pcocci 2022_firenze 17176 May 24 16:15 a.out
+-rw-r--r-- 1 pcocci 2022_firenze  4018 May 24 15:19 builtins.c
+-rw-r--r-- 1 pcocci 2022_firenze  9496 May 25 15:17 builtins.o
+-rw-r--r-- 1 pcocci 2022_firenze  3049 May 24 12:15 builtins2.c
+-rw-r--r-- 1 pcocci 2022_firenze  8912 May 25 15:17 builtins2.o
+-rw-r--r-- 1 pcocci 2022_firenze  2696 May 24 10:11 builtins3.c
+-rw-r--r-- 1 pcocci 2022_firenze  7264 May 25 15:17 builtins3.o
+-rw-r--r-- 1 pcocci 2022_firenze  1450 May 23 16:54 check_builtins.c
+-rw-r--r-- 1 pcocci 2022_firenze  3368 May 25 15:17 check_builtins.o
+-rw-r--r-- 1 pcocci 2022_firenze  2768 May 24 18:20 execute.c
+-rw-r--r-- 1 pcocci 2022_firenze  7224 May 25 15:17 execute.o
+-rw-rw-r-- 1 pcocci 2022_firenze  2652 May 11 14:52 ft_split.c
+-rw-r--r-- 1 pcocci 2022_firenze  4552 May 25 15:17 ft_split.o
+-rw-r--r-- 1 pcocci 2022_firenze  3501 May 24 09:50 handle_variables.c
+-rw-r--r-- 1 pcocci 2022_firenze  7912 May 25 15:17 handle_variables.o
+drwxr-xr-x 2 pcocci 2022_firenze  4096 May 22 15:22 includes
+-rw-r--r-- 1 pcocci 2022_firenze   577 May 25 15:17 input.txt
+-rw-r--r-- 1 pcocci 2022_firenze  1813 May 24 10:28 lst_utils.c
+-rw-r--r-- 1 pcocci 2022_firenze  4896 May 25 15:17 lst_utils.o
+-rw-r--r-- 1 pcocci 2022_firenze  1236 May 24 10:23 lst_utils2.c
+-rw-r--r-- 1 pcocci 2022_firenze  3296 May 25 15:17 lst_utils2.o
+-rw-r--r-- 1 pcocci 2022_firenze  2645 May 25 15:16 main.c
+-rw-r--r-- 1 pcocci 2022_firenze 11152 May 25 15:17 main.o
+-rwxr-xr-x 1 pcocci 2022_firenze 72904 May 25 15:17 minishell
+-rw-r--r-- 1 pcocci 2022_firenze  2842 May 24 17:08 parse_input.c
+-rw-r--r-- 1 pcocci 2022_firenze  6624 May 25 15:17 parse_input.o
+-rw-r--r-- 1 pcocci 2022_firenze  1551 May 24 15:50 path.c
+-rw-r--r-- 1 pcocci 2022_firenze  4096 May 25 15:17 path.o
+-rw-r--r-- 1 pcocci 2022_firenze  1715 May 24 16:15 pipe.c
+-rw-r--r-- 1 pcocci 2022_firenze  6966 May 25 15:17 process_input.c
+-rw-r--r-- 1 pcocci 2022_firenze 12216 May 25 15:17 process_input.o
+-rw-r--r-- 1 pcocci 2022_firenze  2146 May 24 09:59 redirect.c
+-rw-r--r-- 1 pcocci 2022_firenze  5168 May 25 15:17 redirect.o
+-rw-r--r-- 1 pcocci 2022_firenze  1152 May 24 09:52 signals.c
+-rw-r--r-- 1 pcocci 2022_firenze  2540 May 24 10:30 utils.c
+-rw-r--r-- 1 pcocci 2022_firenze  6144 May 25 15:17 utils.o
+-rw-r--r-- 1 pcocci 2022_firenze  1631 May 24 10:36 utils2.c
+-rw-r--r-- 1 pcocci 2022_firenze  4232 May 25 15:17 utils2.o
+-rw-r--r-- 1 pcocci 2022_firenze  1612 May 24 15:48 utils_path.c
+-rw-r--r-- 1 pcocci 2022_firenze  4368 May 25 15:17 utils_path.o
+-rw-r--r-- 1 pcocci 2022_firenze  1396 May 17 15:07 utilscalloc.c
+-rw-r--r-- 1 pcocci 2022_firenze  3728 May 25 15:17 utilscalloc.o
+-rw-r--r-- 1 pcocci 2022_firenze  1072 May 25 15:14 utilsflags.c
+-rw-r--r-- 1 pcocci 2022_firenze  2792 May 25 15:17 utilsflags.o
+-rw-r--r-- 1 pcocci 2022_firenze  3403 May 24 10:17 variables.c
+-rw-r--r-- 1 pcocci 2022_firenze  7984 May 25 15:17 variables.o
+-rw-r--r-- 1 pcocci 2022_firenze  3607 May 24 10:17 variables2.c
+-rw-r--r-- 1 pcocci 2022_firenze  9464 May 25 15:17 variables2.o
