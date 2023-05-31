@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:58:54 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 14:03:17 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/05/31 14:46:27 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,9 +227,9 @@ void	up_envp(char *current, char **envp)
 			break ;
 		}
 	}
-	printf("%s\n", envp[i]);
+	/* printf("%s\n", envp[i]);
 	printf("%s\n", current);
-	printf("%d\n", i);
+	printf("%d\n", i); */
 	if (flag == 0)
 		envp = malloc((sizeof(char *)) * (i + 1));
 	envp[i] = malloc((sizeof(char)) * (ft_strlen(current) + 1));
