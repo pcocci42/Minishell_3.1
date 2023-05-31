@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/05/31 12:40:59 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/05/31 14:33:41 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void    print_parsed_box(t_cmd *cmd)
     int i;
     i = 0;
     int j = 0;
-    printf("%d\n", cmd->nbr_pipe);
+    //printf("%d\n", cmd->nbr_pipe);
     while (cmd->box[i])
     {   
         j = 0;
@@ -139,6 +139,9 @@ void    split_pipes(t_cmd *cmd)
         cmd->box[i] = ft_split(split_pipes[i], ' ');
         i++;
     }
+    /* printf("%d\n", i); */
+    cmd->box[i] = NULL;
+    //printf("%s\n", cmd->box[i][0]);
     i = 0;
     while (split_pipes[i])
     {
@@ -161,18 +164,22 @@ void    variables(t_cmd *cmd, char ***box)
     }
 }
 
-void    parse_input(t_cmd *cmd)
-{
+void    parse_input(t_cmd *cmd, char **envp)
+{   
+    //envp = NULL;
     convert(cmd);
     count_pipes(cmd);
     split_pipes(cmd);
     //print_parsed_box(cmd);
-    //variables(cmd);
-    //variables(cmd, cmd->box);
+    //print_envp2(envp);
+    //printf("###########################\n");
+    look_var(cmd, envp);
+    //printf("###########################\n");
+    //print_envp2(envp);
     flag_init(cmd->f);
     cmd->output = NULL;
     cmd->input = NULL;
-    execute_command(cmd->box, cmd, cmd->nbr_pipe);
+    execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
     cmd->output = NULL;
     cmd->input = NULL;
     flag_init(cmd->f);

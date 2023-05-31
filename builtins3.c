@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/30 11:14:30 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/31 14:07:12 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int printDirectoryContents(char **parsed)
 
 void    ft_cd(char **parsed)
 {   
-    char *path = "/nfs/homes/";
+    //char *path = "/nfs/homes/";
 
     // /printDirectoryContents(parsed);
     // if (ft_strncmp(parsed[0], "cd", 2) == 0)
@@ -99,7 +99,7 @@ void    ft_cd(char **parsed)
         }
         else
         {   
-            chdir(path);
+            //chdir(path);
             chdir(getenv("USER"));
             g_exitstatus = 0;
         }

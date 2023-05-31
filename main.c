@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/05/31 12:21:48 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/05/31 13:28:23 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int g_exitstatus;
 
-void    take_input(t_cmd *cmd)
+void    take_input(t_cmd *cmd, char **envp)
 {   
     char *shell_prompt;
     char *tmp;
@@ -30,12 +30,12 @@ void    take_input(t_cmd *cmd)
     if (ft_strlen(cmd->cmd) != 0)
     {
         add_history(cmd->cmd);
-        parse_input(cmd);
+        parse_input(cmd, envp);
         //process_input(cmd);
     }
 }
 
-void    loop(t_cmd *cmd)
+void    loop(t_cmd *cmd, char **envp)
 {   
     
     struct sigaction action;
@@ -45,7 +45,7 @@ void    loop(t_cmd *cmd)
         sigaction(SIGINT, &action, NULL);
         sigaction(SIGUSR1, &action, NULL);
         signal(SIGQUIT, SIG_IGN);
-        take_input(cmd);
+        take_input(cmd, envp);
     }
 }
 
@@ -100,6 +100,6 @@ int main(int ac, char **av, char **envp)
     clear();
     g_exitstatus = 0;
     my_envp_init(cmd, envp);
-    loop(cmd);
+    loop(cmd, envp);
     exit(g_exitstatus);
 }

@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 12:28:15 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/05/31 14:14:44 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ typedef struct s_flags {
 }   t_flags;
 
 void    exe_basic_cmd(char **parsed, char *command, char **envp);
+int		check_var_loop(char **parsed);
+int     is_valid_command(const char* string);
 void    variables(t_cmd *cmd, char ***box);
 int     is_there_more_commands(t_cmd *cmd, char **parsed);
 void    ft_strstr(t_cmd *cmd, int j, int i, char **parsed);
@@ -103,12 +105,14 @@ int     check_cmds(char **parsed, int j);
 void    ft_export(t_cmd *cmd, char **parsed);
 void    print_envp(char **envp, char **parsed);
 int     check_empty(t_cmd *cmd);
-void    parse_input(t_cmd *cmd);
+void    parse_input(t_cmd *cmd, char **envp);
 void    process_input(t_cmd *cmd, char **parsed);
 void    exeArgs(t_cmd *cmd, int j, int i);
 void	ft_strcpy(char *dst, const char *src);
 char    *find_command_path(const char* command);
-void    execute_command(char*** commands, t_cmd *cmd, int num_pipes);
+void    execute_command(char*** commands, t_cmd *cmd, int num_pipe, char **envp);
+void	look_var(t_cmd *cmd, char **envp);
+void	print_envp2(char **envp);
 
 // BUILTINS AND REDIRECTIONS
 

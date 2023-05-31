@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/05/31 12:37:21 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/05/31 14:14:09 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char* find_command_path(const char* command) {
     return NULL;
 }
 
-void execute_command(char*** commands, t_cmd *cmd, int num_pipes) 
+void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp) 
 {
     int input_fd = STDIN_FILENO;
     int output_fd = STDOUT_FILENO;
@@ -116,9 +116,9 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes)
             close(output_fd);
 
             // Execute the command
-            if (check_cmds(cmd->box[i], 0) == 1)
+            if (check_cmds(cmd->box[i], 0) == 1 && check_var_loop(cmd->box[i]) == 0 && is_valid_command(cmd->box[i][0]) == 0)
             {
-                execve(find_command_path(commands[i][0]), commands[i], NULL);
+                execve(find_command_path(commands[i][0]), commands[i], envp);
                 perror("execve");
             }
             else

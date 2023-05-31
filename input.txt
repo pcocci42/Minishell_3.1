@@ -1,1 +1,61 @@
+ciao
+total 800
+-rw-r--r--@ 1 paolococci  staff   1467 May 30 11:54 Makefile
+-rw-r--r--@ 1 paolococci  staff    153 May 22 19:29 TODO.md
+-rwxr-xr-x@ 1 paolococci  staff  50024 May 28 16:48 a.out
+-rw-r--r--@ 1 paolococci  staff   3870 May 31 12:47 builtins.c
+-rw-r--r--  1 paolococci  staff   6792 May 31 13:55 builtins.o
+-rw-r--r--@ 1 paolococci  staff   3133 May 31 12:46 builtins2.c
+-rw-r--r--  1 paolococci  staff   5352 May 31 13:55 builtins2.o
+-rw-r--r--@ 1 paolococci  staff   2685 May 30 11:14 builtins3.c
+-rw-r--r--  1 paolococci  staff   6392 May 31 13:55 builtins3.o
+-rw-r--r--@ 1 paolococci  staff   1450 May 23 16:54 check_builtins.c
+-rw-r--r--  1 paolococci  staff   2808 May 31 13:55 check_builtins.o
+-rw-r--r--@ 1 paolococci  staff   2799 May 29 14:43 execute.c
+-rw-r--r--  1 paolococci  staff   5944 May 31 13:55 execute.o
+-rw-rw-r--@ 1 paolococci  staff   2652 May 11 14:52 ft_split.c
+-rw-r--r--  1 paolococci  staff   4096 May 31 13:55 ft_split.o
+-rw-r--r--@ 1 paolococci  staff   4052 May 31 13:55 handle_variables.c
+-rw-r--r--  1 paolococci  staff   8168 May 31 13:55 handle_variables.o
+drwxr-xr-x@ 3 paolococci  staff     96 May 31 11:49 includes
+-rw-r--r--@ 1 paolococci  staff      5 May 31 13:55 input.txt
+-rw-r--r--@ 1 paolococci  staff   1813 May 24 10:28 lst_utils.c
+-rw-r--r--  1 paolococci  staff   4160 May 31 13:55 lst_utils.o
+-rw-r--r--@ 1 paolococci  staff   1236 May 24 10:23 lst_utils2.c
+-rw-r--r--  1 paolococci  staff   2840 May 31 13:55 lst_utils2.o
+-rw-r--r--@ 1 paolococci  staff   2694 May 31 13:28 main.c
+-rw-r--r--  1 paolococci  staff   7608 May 31 13:55 main.o
+-rwxr-xr-x  1 paolococci  staff  81824 May 31 13:55 minishell
+-rw-r--r--@ 1 paolococci  staff   2978 May 30 12:40 new_process.c
+-rw-r--r--  1 paolococci  staff   5776 May 31 13:55 new_process.o
+-rw-r--r--@ 1 paolococci  staff   4540 May 31 13:54 parse_input.c
+-rw-r--r--  1 paolococci  staff   7856 May 31 13:55 parse_input.o
+-rw-r--r--@ 1 paolococci  staff   1551 May 24 15:50 path.c
+-rw-r--r--  1 paolococci  staff   3296 May 31 13:55 path.o
+-rw-r--r--@ 1 paolococci  staff   4827 May 31 13:37 pipe.c
+-rw-r--r--  1 paolococci  staff   8232 May 31 13:55 pipe.o
+-rw-r--r--@ 1 paolococci  staff   7153 May 30 11:36 process_input.c
+-rw-r--r--@ 1 paolococci  staff   2146 May 24 09:59 redirect.c
+-rw-r--r--  1 paolococci  staff   4424 May 31 13:55 redirect.o
+-rw-r--r--@ 1 paolococci  staff   1152 May 24 09:52 signals.c
+-rw-r--r--@ 1 paolococci  staff   2680 May 29 12:55 utils.c
+-rw-r--r--  1 paolococci  staff   6072 May 31 13:55 utils.o
+-rw-r--r--@ 1 paolococci  staff   1631 May 24 10:36 utils2.c
+-rw-r--r--  1 paolococci  staff   3616 May 31 13:55 utils2.o
+-rw-r--r--@ 1 paolococci  staff   1612 May 24 15:48 utils_path.c
+-rw-r--r--  1 paolococci  staff   3952 May 31 13:55 utils_path.o
+-rw-r--r--@ 1 paolococci  staff   1396 May 17 15:07 utilscalloc.c
+-rw-r--r--  1 paolococci  staff   3376 May 31 13:55 utilscalloc.o
+-rw-r--r--@ 1 paolococci  staff   1072 May 25 15:14 utilsflags.c
+-rw-r--r--  1 paolococci  staff   2400 May 31 13:55 utilsflags.o
+-rw-r--r--@ 1 paolococci  staff   3756 May 31 12:39 variables.c
+-rw-r--r--  1 paolococci  staff   6424 May 31 13:55 variables.o
+-rw-r--r--@ 1 paolococci  staff   3659 May 31 12:38 variables2.c
+-rw-r--r--  1 paolococci  staff   7080 May 31 13:55 variables2.o
+handle_variables.c
+handle_variables.o
+variables.c
+variables.o
+variables2.c
+variables2.o
 ciao ciao
