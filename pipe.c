@@ -1,58 +1,149 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
+/*   Updated: 2023/05/31 12:37:21 by paolococci       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void run_commands_with_pipe(char* commands[], int num_commands, char **envp) {
-    int i;
-    int fd[2];
-    int in = dup(STDIN_FILENO);
+#include "./includes/minishell.h"
 
-    for (i = 0; i < num_commands - 1; i++) {
-        pipe(fd); // create a pipe
-
-        if (fork() == 0) { // child process
-            dup2(in, 0); // redirect stdin
-
-            // If it's not the last command, redirect stdout to the write end of the pipe
-            if (i != num_commands - 1)
-                dup2(fd[1], 1); // redirect stdout
-
-            close(fd[0]); // close unused read end of the pipe
-
-            // Execute the command
-            if (execve(commands[i], commands + i, envp) == -1) {
-                perror("Error executing command");
-                exit(EXIT_FAILURE);
-            }
-        } else { // parent process
-            wait(NULL); // wait for the child process to finish
-            close(fd[1]); // close write end of the pipe
-            in = fd[0]; // set the next input to the read end of the pipe
-        }
+char* find_command_path(const char* command) {
+    char* path_env = getenv("PATH");
+    if (path_env == NULL) {
+        printf("Error: PATH environment variable not set.\n");
+        return NULL;
     }
 
-    // Execute the last command
-    if (fork() == 0) { // child process
-        dup2(in, 0); // redirect stdin
+    char* path = strdup(path_env);
+    if (path == NULL) {
+        perror("strdup");
+        return NULL;
+    }
 
-        // Execute the command
-        if (execve(commands[i], commands + i, envp) == -1) {
-            perror("Error executing command");
+    char* dir = strtok(path, ":");
+    while (dir != NULL) {
+        char* full_path = (char*)malloc(strlen(dir) + strlen(command) + 2);
+        if (full_path == NULL) {
+            perror("malloc");
+            free(path);
+            return NULL;
+        }
+        sprintf(full_path, "%s/%s", dir, command);
+
+        if (access(full_path, X_OK) == 0) {
+            free(path);
+            return full_path;
+        }
+        free(full_path);
+        dir = strtok(NULL, ":");
+    }
+    free(path);
+    return NULL;
+}
+
+void execute_command(char*** commands, t_cmd *cmd, int num_pipes) 
+{
+    int input_fd = STDIN_FILENO;
+    int output_fd = STDOUT_FILENO;
+    int original_stdout = dup(STDOUT_FILENO);
+    int last_command_index = num_pipes;
+
+    int pipe_fds[num_pipes][2];
+    for (int i = 0; i < num_pipes; i++) {
+        if (pipe(pipe_fds[i]) == -1) {
+            perror("pipe");
             exit(EXIT_FAILURE);
         }
-    } else { // parent process
-        wait(NULL); // wait for the child process to finish
-    }
-}
-
-int main(int argc, char *argv[], char **envp) {
-    if (argc < 2) {
-        printf("Usage: %s <command1> <command2> ... <commandN>\n", argv[0]);
-        return 1;
     }
 
-    run_commands_with_pipe(argv + 1, argc - 1, envp);
+    for (int i = 0; i <= num_pipes; i++) 
+    {
+        /* handle_var(cmd->box[i], cmd);
+        if (cmd->var_count > 0)
+            return; */
+        int x = is_there_more_commands(cmd, cmd->box[i]);
+        if (x > 0)
+        {
+            printf("%d\n", x);
+            check_redirects_out(cmd, cmd->box[i]);
+            cmd->box[i] = cmd->new_cmd;
+        }
+        pid_t pid = fork();
+        if (pid < 0) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            // Child process
+            // Redirect input
+            if (i == 0 && cmd->input != NULL) {
+                input_fd = open(cmd->input, O_RDONLY);
+                if (input_fd == -1) {
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+            } else if (i > 0) {
+                close(pipe_fds[i - 1][1]);
+                input_fd = pipe_fds[i - 1][0];
+            }
 
-    return 0;
+            dup2(input_fd, STDIN_FILENO);
+            close(input_fd);
+
+            // Redirect output
+            if (i == last_command_index && cmd->output != NULL) {
+                if (cmd->f->append_out)
+                    output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                else
+                    output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+                if (output_fd == -1) {
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+            } else if (i == last_command_index && cmd->output == NULL) {
+                output_fd = original_stdout;
+            } else if (i < num_pipes) {
+                close(pipe_fds[i][0]);
+                output_fd = pipe_fds[i][1];
+            }
+
+            dup2(output_fd, STDOUT_FILENO);
+            close(output_fd);
+
+            // Execute the command
+            if (check_cmds(cmd->box[i], 0) == 1)
+            {
+                execve(find_command_path(commands[i][0]), commands[i], NULL);
+                perror("execve");
+            }
+            else
+            {   
+                //mrintf("qiui\n");
+                custom_commands(cmd, cmd->box[i]);
+            }
+            //exit(EXIT_FAILURE);
+        } else {
+            // Parent process
+
+            if (i > 0) {
+                close(pipe_fds[i - 1][0]);
+                close(pipe_fds[i - 1][1]);
+            }
+        }
+    }
+
+    // Wait for all child processes to complete
+    for (int i = 0; i <= num_pipes; i++) {
+        wait(NULL);
+    }
+
+    // Restore the original stdout
+    dup2(original_stdout, STDOUT_FILENO);
+    close(original_stdout);
 }
+

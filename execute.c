@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 15:17:38 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/05/24 18:20:13 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:43:48 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void    exe_basic_cmd(char **parsed, char *command, char **envp) // function for
     ft_strlcpy(command, "/bin/", 9);
     ft_strlcat(command, parsed[0], 6 + len );
     //ft_printf("%s\n", command);
+    //printf("%s\n", command);
     if (!execve(command, parsed, envp))
     { 
         printf("error execve\n");

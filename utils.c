@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 11:24:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/24 10:30:42 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:55:47 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,19 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	while (src[i])
 		i++;
 	return (i);
+}
+
+void	ft_strcpy(char *dst, const char *src)
+{
+	size_t	i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
 }
 
 size_t	ft_strlen(const char *str)

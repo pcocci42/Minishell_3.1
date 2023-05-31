@@ -6,7 +6,7 @@
 /*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/24 10:11:21 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/30 11:14:30 by lmasetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,16 @@ int printDirectoryContents(char **parsed)
     return (1);
 }
 
-void    ft_cd(char **parsed, int j)
+void    ft_cd(char **parsed)
 {   
     char *path = "/nfs/homes/";
 
     // /printDirectoryContents(parsed);
     // if (ft_strncmp(parsed[0], "cd", 2) == 0)
     {   
-        if (parsed[j+1])
+        if (parsed[1])
         {
-            if (chdir(parsed[j+1]) == 0)
+            if (chdir(parsed[1]) == 0)
                 g_exitstatus = 0;
             else
             {   

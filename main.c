@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/05/25 15:16:32 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/05/31 12:21:48 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void    take_input(t_cmd *cmd)
     {
         add_history(cmd->cmd);
         parse_input(cmd);
-        process_input(cmd);
+        //process_input(cmd);
     }
 }
 
@@ -73,7 +73,7 @@ void   my_envp_init(t_cmd *cmd, char **envp)
     i = 0;
     cmd->envp = envp;
     while (envp[i])
-    {
+    {   
         i++;
     }
     cmd->envp2 = malloc(sizeof(char *) * i + 1);

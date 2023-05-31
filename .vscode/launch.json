@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/paolococci/Desktop/Minishell_3.1",
+      "program": "/Users/paolococci/Desktop/Minishell_3.1/build/Debug/outDebug"
+    }
+  ]
+}

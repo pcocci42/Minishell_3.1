@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:58:54 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/18 15:54:05 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/31 12:29:47 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,52 +98,27 @@ char	*take_content(char *parsed)
 
 void	handle_var(char **parsed, t_cmd *cmd)
 {
-	int	args;
 	int i;
-	int j;
 	t_var *copy;
-
-	j = 0;
-	args = count_args(cmd->cmd, ' ');
-	i = 0;
-	//printf("arg count: %d\n", args);
-	
-	i = 0;
-	while (args > 0)
-	{
-		if (check_var(parsed[i]) == 0)
-			i++;
-		args--;
-	}
-	args = count_args(cmd->cmd, ' ');
-	while (parsed[j])
-	{
-		if (check_var(parsed[j]) == 1)
-		{
-			cmd->var_count++;
-		}
-		j++;
-	}
-	/* printf("primo parsed %s\n", cmd->parsed[i]);
-	printf("index parsed %d\n", i);
-	printf("var count: %d\n", cmd->var_count); */
-	
-	
 	t_var *current;
+	
+	i = 0;
+	cmd->var_count = 0;
 	copy = cmd->variable;
-    while (cmd->parsed[i]) {
-        if (check_var(cmd->parsed[i]) == 1) {
+    while (parsed[i]) {
+        if (check_var(parsed[i]) == 1) {
             current = copy;
+			cmd->var_count++;
             while (current) {
-                if (ft_strcmp(take_var(cmd->parsed[i]), current->nome) == 0) {
-                    current->content = take_content(cmd->parsed[i]);
+                if (ft_strcmp(take_var(parsed[i]), current->nome) == 0) {
+                    current->content = take_content(parsed[i]);
                     break;
                 }
                 current = current->next;
             }
             if (!current) {
                 // Variable not found, create a new one
-                t_var *new_var = ft_lst(take_var(cmd->parsed[i]), take_content(cmd->parsed[i]));
+                t_var *new_var = ft_lst(take_var(parsed[i]), take_content(parsed[i]));
                 if (copy) {
                     while (copy->next) {
                         copy = copy->next;
@@ -159,6 +134,6 @@ void	handle_var(char **parsed, t_cmd *cmd)
     cmd->variable = copy; 
 	//checks
 	//ft_lstprint(cmd->variable);
-	i = ft_lstcount(cmd->variable);
+	//i = ft_lstcount(cmd->variable);
 	//printf("%d\n", i);
 }

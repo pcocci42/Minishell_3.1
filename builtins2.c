@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/24 12:15:24 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/31 12:46:54 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void    ft_env(t_cmd *cmd, int j)
+void    ft_env(t_cmd *cmd, char **parsed)
 {
     int i;
 
     i = 0;
-    if (ft_strcmp(cmd->parsed[j], "env") == 0  && cmd->parsed[j+1] == NULL)
+    if (ft_strcmp(parsed[0], "env") == 0  && (parsed[1] == NULL || cmd->f->re_out == 1))
     {
         while (cmd->envp2[i])
             printf("%s\n", cmd->envp2[i++]);
         g_exitstatus = 0;
     }
-    else if (ft_strcmp(cmd->parsed[j], "env") == 0  && cmd->parsed[j+1] != NULL)
+    else if (ft_strcmp(parsed[0], "env") == 0  && cmd->parsed[1] != NULL)
         g_exitstatus = 130;
 }
 
@@ -81,41 +81,41 @@ void    ft_unset_envp2(t_cmd *cmd, int x)
 	cmd->envp2 = new_env;
 }
 
-void    ft_unset(t_cmd *cmd, int j)
+/* void    ft_unset(t_cmd *cmd, char **parsed)
 {
     int i;
 
-    i = j+1;
-    while (ft_strncmp(cmd->parsed[j], "unset", 5) == 0 && cmd->parsed[i])
+    i = 1;
+    while (ft_strncmp(parsed[0], "unset", 5) == 0 && parsed[i])
     {
         ft_unset_envp1(cmd,i);
         ft_unset_envp2(cmd,i);
         i++;
     }
-}
+} */
 
-void    ft_prova_redirect(t_cmd *cmd, int j)
-{
-	if (ft_strncmp(cmd->parsed[j], "<<", 2) == 0)
-    {
-       handle_input_heredoc(cmd->parsed[j+1]);
-    }
-    else if (ft_strncmp(cmd->parsed[j], ">>", 2) == 0)
-    {
-       handle_output_append_redirection(cmd->parsed[j+1]);
-    }
-    else if (ft_strncmp(cmd->parsed[j], "<", 1) == 0)
-    {
-       handle_input_redirection(cmd->parsed[j+1]);
-    }
-    else if (ft_strncmp(cmd->parsed[j], ">", 1) == 0)
-    {
-       handle_output_redirection(cmd->parsed[j+1]);
-    }
-    else if (ft_strncmp(cmd->parsed[j], "|", 1) == 0)
-    {
-    //    pipala;
-    }
-    else
-        return;
-}
+// void    ft_prova_redirect(t_cmd *cmd)
+// {
+// 	if (ft_strncmp(cmd->parsed[j], "<<", 2) == 0)
+//     {
+//        handle_input_heredoc(cmd->parsed[j+1]);
+//     }
+//     else if (ft_strncmp(cmd->parsed[j], ">>", 2) == 0)
+//     {
+//        handle_output_append_redirection(cmd->parsed[j+1]);
+//     }
+//     else if (ft_strncmp(cmd->parsed[j], "<", 1) == 0)
+//     {
+//        handle_input_redirection(cmd->parsed[j+1]);
+//     }
+//     else if (ft_strncmp(cmd->parsed[j], ">", 1) == 0)
+//     {
+//        handle_output_redirection(cmd->parsed[j+1]);
+//     }
+//     else if (ft_strncmp(cmd->parsed[j], "|", 1) == 0)
+//     {
+//     //    pipala;
+//     }
+//     else
+//         return;
+// }

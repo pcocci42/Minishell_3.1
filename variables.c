@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variables.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 12:56:15 by pcocci            #+#    #+#             */
-/*   Updated: 2023/05/24 10:17:44 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/05/31 12:39:18 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 //extern char **environ;
 
-int    check_environ_ez(t_cmd *cmd, int j)
+int    check_environ_ez(t_cmd *cmd, int j, char **parsed)
 {   
     int i;
 
     i = 0;
     while (cmd->envp[i])
     {
-        if (ft_strcmp(cmd->parsed[j], cmd->envp[i]) == 0)
+        if (ft_strcmp(parsed[j], cmd->envp[i]) == 0)
         {
             printf("already present in export list");
             //g_exitstatus = 1;
@@ -32,16 +32,16 @@ int    check_environ_ez(t_cmd *cmd, int j)
     return (0);
 }
 
-int     check_list(t_cmd *cmd, int i)
+int     check_list(t_cmd *cmd, int i, char **parsed)
 {
     t_var *tmp;
 
     tmp = cmd->variable;
     while(cmd->variable)
     {
-        if(ft_strcmp(cmd->parsed[i], cmd->variable->nome) == 0)
+        if(ft_strcmp(parsed[i], cmd->variable->nome) == 0)
         {
-            ft_putenv(cmd->parsed[i], cmd->variable->content, cmd);
+            ft_putenv(parsed[i], cmd->variable->content, cmd);
             cmd->variable = tmp;
             return(1);
         }
@@ -61,29 +61,33 @@ void    add_lst_ez(t_cmd *cmd, char *parsed)
     //ft_lstprint(cmd->variable);
 }
 
-void    ft_export(t_cmd *cmd)
+void    ft_export(t_cmd *cmd, char **parsed)
 {   
     int i;
 
     i = 0;
-    if (ft_strcmp(cmd->parsed[0], "export") == 0 && cmd->parsed[1] == NULL)
+    if (ft_strcmp(parsed[0], "export") == 0 && (parsed[1] == NULL || cmd->f->re_out == 1))
     {
         while (cmd->envp[i])
             printf("declare -x %s\n", cmd->envp[i++]);
     }
-    else if (ft_strcmp(cmd->parsed[0], "export") == 0)
+    else if (ft_strcmp(parsed[0], "export") == 0)
     {   
         i = 1;
-        while (cmd->parsed[i])
+        printf("%s\n", parsed[i]);
+        while (parsed[i])
         {   
-            if (check_var(cmd->parsed[i]) == 1)
-                export_full(cmd, i);
-            else if (check_var(cmd->parsed[i]) == 0 && check_list(cmd,i) == 0) 
+            if (check_var(parsed[i]) == 1)
+            {   
+                printf("check var ok\n");
+                export_full(cmd, i, parsed);
+            }
+            else if (check_var(parsed[i]) == 0 && check_list(cmd,i, parsed) == 0) 
             {
-                if(check_environ_ez(cmd,i) == 0)
+                if(check_environ_ez(cmd,i, parsed) == 0)
                 {
-                    ft_putenv_ez(cmd->parsed[i], cmd);
-                    add_lst_ez(cmd, cmd->parsed[i]);
+                    ft_putenv_ez(parsed[i], cmd);
+                    add_lst_ez(cmd, parsed[i]);
                 }
             }
             i++;
@@ -91,7 +95,7 @@ void    ft_export(t_cmd *cmd)
     }       
 }
 
-void    export_full(t_cmd *cmd, int i)
+void    export_full(t_cmd *cmd, int i, char **parsed)
 {
     t_var *tmp;
     int q;
@@ -100,14 +104,18 @@ void    export_full(t_cmd *cmd, int i)
     tmp = cmd->variable;
     while (cmd->variable)
         {
-        if (ft_strcmp(take_var(cmd->parsed[i]), cmd->variable->nome) == 0)
-        {
-            q = check_environ2(cmd,i);
-            w = check_environ(cmd,i);
-            // printf("check su export = %d, check su env= %d\n", q,w);
+        if (ft_strcmp(take_var(parsed[i]), cmd->variable->nome) == 0)
+        {   
+            //printf("%s\n", take_var(parsed[i]));
+            q = check_environ2(cmd,i, parsed);
+            w = check_environ(cmd,i, parsed);
+            //printf("check su export = %d, check su env= %d\n", q,w);
             if(q == 0 && w == 0)
-                {
+                {   
+                    /* printf("%s\n", cmd->variable->nome);
+                    printf("%s\n", cmd->variable->content); */
                     ft_putenv(cmd->variable->nome, cmd->variable->content, cmd);
+
                     // printf("nuovo elemento con putenv\n");
                 }
         }
