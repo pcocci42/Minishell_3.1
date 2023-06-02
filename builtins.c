@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 12:47:45 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 14:52:19 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
 {
 	int	tmp;
 	int	flag;
-
+    (void)cmd;
 	tmp = n;
 	flag = 0;
 	if (!parsed && n == 1)
@@ -67,7 +67,10 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
                 /* printf("%s\n", cmd->parsed[j+n]); */
                 if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
                 {
-                    printf("%s", ft_getenv(cmd, parsed[n]));
+                    if (ft_strchr(parsed[n], 18))
+                        printf("|"); 
+                    printf("%s", getenv(parsed[n]));
+                    //perror("getenv");
                     flag = 1;
                     if (parsed[n + 1] != 0)
                         printf(" ");
@@ -79,7 +82,11 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
             while (parsed[n] != 0)
             {
                 if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
-                {   
+                { 
+                    if (ft_strchr(parsed[n], 18))
+                        printf("|");
+                    if (ft_strchr(parsed[n], 20))
+                        printf("$"); 
                     printf("%s", parsed[n]);
                     // flag = 1;
                     if (parsed[n + 1] != 0)
@@ -113,7 +120,7 @@ void    ft_echo(t_cmd *cmd, char **parsed)
         {
             if(ft_strncmp(parsed[1], "$?", 2) == 0)
             {
-                printf("exitstatus %d\n", g_exitstatus);
+                printf("%d\n", g_exitstatus);
                 g_exitstatus = 0;
             }
             else
@@ -122,18 +129,14 @@ void    ft_echo(t_cmd *cmd, char **parsed)
     }
 }
 
-void    custom_commands(t_cmd *cmd, char **parsed)  // hard coded commands;
+void    custom_commands(t_cmd *cmd, char **parsed, char **envp)  // hard coded commands;
 {
     if (ft_strncmp(parsed[0], "exit", 6) == 0)
         ft_exit(cmd->parsed);
-    if (ft_strncmp(parsed[0], "cd", 2) == 0)
-        ft_cd(parsed);
     if (ft_strncmp(parsed[0], "pwd", 3) == 0)
         ft_pwd();
     ft_echo(cmd, parsed);
-    ft_export(cmd, parsed);
+    ft_export(cmd, parsed, envp);
     ft_env(cmd, parsed);
     exit(0);
-    //ft_unset(cmd);
-    // ft_prova_redirect(cmd, j);
 }

@@ -6,13 +6,15 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/05/31 13:28:23 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 15:23:47 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
 int g_exitstatus;
+
+extern char **environ;
 
 void    take_input(t_cmd *cmd, char **envp)
 {   
@@ -85,7 +87,6 @@ void   my_envp_init(t_cmd *cmd, char **envp)
     }
     cmd->variable = ft_lst("testa", "testa");
     cmd->f = malloc(sizeof(t_flags));
-    flag_init(cmd->f);
     cmd->f->in = dup(STDIN_FILENO);
     cmd->f->out = dup(STDOUT_FILENO);
 }

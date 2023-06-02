@@ -6,11 +6,30 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/05/31 14:14:09 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 15:58:45 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
+
+void    expand_var(t_cmd *cmd)
+{
+
+    int i = 0;
+    int j = 0;
+    while (cmd->box[i])
+    {   
+        j = 0;
+        while (cmd->box[i][j])
+        {   
+            if (cmd->box[i][j][0] == '$')
+                cmd->box[i][j] = getenv(cmd->box[i][j] + 1);
+            j++;
+        }
+        i++;
+    }
+}
+
 
 char* find_command_path(const char* command) {
     char* path_env = getenv("PATH");
@@ -61,18 +80,17 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
         }
     }
 
+
     for (int i = 0; i <= num_pipes; i++) 
     {
-        /* handle_var(cmd->box[i], cmd);
-        if (cmd->var_count > 0)
-            return; */
         int x = is_there_more_commands(cmd, cmd->box[i]);
         if (x > 0)
         {
-            printf("%d\n", x);
             check_redirects_out(cmd, cmd->box[i]);
             cmd->box[i] = cmd->new_cmd;
         }
+        if (cmd->syntax_err == 1)
+            return ; 
         pid_t pid = fork();
         if (pid < 0) {
             perror("fork");
@@ -116,32 +134,39 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
             close(output_fd);
 
             // Execute the command
-            if (check_cmds(cmd->box[i], 0) == 1 && check_var_loop(cmd->box[i]) == 0 && is_valid_command(cmd->box[i][0]) == 0)
-            {
-                execve(find_command_path(commands[i][0]), commands[i], envp);
+            if (check_cmds(cmd->box[i], 0) == 1 &&  check_var_loop(cmd->box[i]) == 0 && is_valid_command(cmd->box[i][0]) == 0)
+            {   
+                expand_var(cmd);
+                if (ft_strchr(commands[i][0], '/'))
+                    execve((commands[i][0]), commands[i], environ);
+                else
+                    execve(find_command_path(commands[i][0]), commands[i], environ);
                 perror("execve");
             }
             else
             {   
-                //mrintf("qiui\n");
-                custom_commands(cmd, cmd->box[i]);
+                custom_commands(cmd, cmd->box[i], envp);
             }
-            //exit(EXIT_FAILURE);
+            if (i > 0) 
+            {
+                close(pipe_fds[i - 1][0]);
+            }
+            if (i < num_pipes) 
+            {
+                close(pipe_fds[i][1]);
+            }
         } else {
             // Parent process
-
             if (i > 0) {
                 close(pipe_fds[i - 1][0]);
                 close(pipe_fds[i - 1][1]);
             }
         }
     }
-
     // Wait for all child processes to complete
     for (int i = 0; i <= num_pipes; i++) {
         wait(NULL);
     }
-
     // Restore the original stdout
     dup2(original_stdout, STDOUT_FILENO);
     close(original_stdout);

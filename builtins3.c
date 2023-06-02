@@ -6,11 +6,12 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 14:07:12 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 13:59:37 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
+#include "unistd.h"
 
 void    ft_pwd()
 {
@@ -82,27 +83,12 @@ int printDirectoryContents(char **parsed)
 
 void    ft_cd(char **parsed)
 {   
-    //char *path = "/nfs/homes/";
 
-    // /printDirectoryContents(parsed);
-    // if (ft_strncmp(parsed[0], "cd", 2) == 0)
-    {   
-        if (parsed[1])
-        {
-            if (chdir(parsed[1]) == 0)
-                g_exitstatus = 0;
-            else
-            {   
-                printf("Directory does not exist\n");
-                g_exitstatus = 1;
-            }
-        }
-        else
-        {   
-            //chdir(path);
-            chdir(getenv("USER"));
-            g_exitstatus = 0;
-        }
-       
+    if (parsed[1])
+    {
+        if (chdir(parsed[1]) == -1)
+            perror("chdir");
     }
+    else
+        chdir("/");
 }

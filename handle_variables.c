@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:58:54 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 14:46:27 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/01 17:20:51 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,16 +208,16 @@ void	print_envp2(char **envp)
 	}
 }
 
-void	up_envp(char *current, char **envp)
+void	up_envp(char *current)
 {
 	int i;
 	int flag;
 
 	i = 0;
 	flag = 0;
-	while (envp[i])
+	while (environ[i])
 	{
-		if (ft_strcmp(take_var(envp[i]), take_var(current)) != 0)
+		if (ft_strcmp(take_var(environ[i]), take_var(current)) != 0)
 		{
 			i++;
 		}
@@ -227,17 +227,19 @@ void	up_envp(char *current, char **envp)
 			break ;
 		}
 	}
-	/* printf("%s\n", envp[i]);
+	printf("%s\n", environ[i]);
 	printf("%s\n", current);
-	printf("%d\n", i); */
-	if (flag == 0)
-		envp = malloc((sizeof(char *)) * (i + 1));
-	envp[i] = malloc((sizeof(char)) * (ft_strlen(current) + 1));
-	ft_strcpy(envp[i], current);
-	envp[i + 1] = NULL;
+	//printf("%d\n", i);
+	/* if (flag == 0)
+		envp = malloc((sizeof(char *)) * (i + 1)); */
+	environ[i] = malloc((sizeof(char)) * (ft_strlen(current) + 1));
+	ft_strcpy(environ[i], current);
+	printf("%s\n", environ[i]);
+	environ[i + 1] = NULL;
+	printf("%s\n", environ[i+1]);
 }
 
-void	look_var(t_cmd *cmd, char **envp)
+void	look_var(t_cmd *cmd)
 {
 	int i;
 	int j;
@@ -251,7 +253,7 @@ void	look_var(t_cmd *cmd, char **envp)
 		{	
 			if (check_var(cmd->box[i][j]) == 1)
 			{
-				up_envp(cmd->box[i][j], envp);
+				up_envp(cmd->box[i][j]);
 			}
 			j++;
 		}

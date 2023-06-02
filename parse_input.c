@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/05/31 14:33:41 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 16:04:20 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ int   ft_chr(char *cmd, char c, int i)
 void    convert_dquote(t_cmd *cmd)
 {
     int i;
+    int flag;
 
+    flag = 0;
     i = 0;
     {
         while (cmd->cmd[i])
@@ -164,6 +166,32 @@ void    variables(t_cmd *cmd, char ***box)
     }
 }
 
+void    add_spaces(t_cmd *cmd)
+{   
+    int i = 0;
+    int j = 0;
+    int x = 0;
+
+    while (cmd->box[i])
+    {   
+        j = 0;
+        while (cmd->box[i][j])
+        {   
+            x = 0;
+            while (cmd->box[i][j][x])
+            {
+                if (cmd->box[i][j][x] == 17)
+                    cmd->box[i][j][x] = ' '; 
+                if (cmd->box[i][j][x] == 18)
+                    cmd->box[i][j][x] = '|';
+                x++;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
 void    parse_input(t_cmd *cmd, char **envp)
 {   
     //envp = NULL;
@@ -173,14 +201,23 @@ void    parse_input(t_cmd *cmd, char **envp)
     //print_parsed_box(cmd);
     //print_envp2(envp);
     //printf("###########################\n");
-    look_var(cmd, envp);
+    look_var(cmd);
     //printf("###########################\n");
     //print_envp2(envp);
-    flag_init(cmd->f);
+    flag_init(cmd);
     cmd->output = NULL;
     cmd->input = NULL;
-    execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
+    add_spaces(cmd);
+    if (ft_strcmp(cmd->box[0][0], "cd") == 0)
+    {
+        ft_cd(cmd->box[0]);
+        if (cmd->box[1] != NULL)
+            cmd->box++;
+    }
+    else
+        execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
+    //print_envp2(envp); 
     cmd->output = NULL;
     cmd->input = NULL;
-    flag_init(cmd->f);
+    flag_init(cmd);
 }

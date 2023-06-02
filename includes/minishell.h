@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 14:14:44 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 15:22:19 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <dirent.h>
+#include <errno.h>
 
 //buffer get_next_line
 # ifndef BUFFER_SIZE 
@@ -36,6 +37,7 @@ typedef struct s_var t_var;
 typedef struct s_flags t_flags;
 
 extern int g_exitstatus;
+extern char **environ;
 
 typedef struct s_var {
 
@@ -96,13 +98,13 @@ char	*new_txt(char *txt);
 char	*_strchr(char *s, int c);
 void    loop();
 void    handler(int sig_num);
-void    custom_commands(t_cmd *cmd, char **parsed);
+void    custom_commands(t_cmd *cmd, char **parsed, char **envp);
 char    *remove_tilde(char *str);
 int     ft_strcmp(const char *s1, const char *s2);
 int     check_dir(char **parsed);
 void	handle_var(char **parsed, t_cmd *cmd);
 int     check_cmds(char **parsed, int j);
-void    ft_export(t_cmd *cmd, char **parsed);
+void    ft_export(t_cmd *cmd, char **parsed, char **envp);
 void    print_envp(char **envp, char **parsed);
 int     check_empty(t_cmd *cmd);
 void    parse_input(t_cmd *cmd, char **envp);
@@ -111,7 +113,7 @@ void    exeArgs(t_cmd *cmd, int j, int i);
 void	ft_strcpy(char *dst, const char *src);
 char    *find_command_path(const char* command);
 void    execute_command(char*** commands, t_cmd *cmd, int num_pipe, char **envp);
-void	look_var(t_cmd *cmd, char **envp);
+void	look_var(t_cmd *cmd);
 void	print_envp2(char **envp);
 
 // BUILTINS AND REDIRECTIONS
@@ -133,7 +135,6 @@ void    handle_output_append_redirection(char* filename);
 int    check_environ_ez(t_cmd *cmd, int j, char **parsed);
 int    check_list(t_cmd *cmd, int i, char **parsed);
 void    add_lst_ez(t_cmd *cmd, char *parsed);
-void    ft_export(t_cmd *cmd, char **parsed);
 int    check_environ(t_cmd *cmd, int j, char **parsed);
 int    check_environ2(t_cmd *cmd, int j, char **parsed);
 int ft_putenv_ez(char *name, t_cmd *cmd);
@@ -176,7 +177,7 @@ int	ft_lstcount(t_var *lst);
 void	ft_lstadd_back(t_var **lst, t_var *new);
 
 // GESTIONE FLAG PER CARATTERI SPECIALI
-void	flag_init(t_flags *f);
+void	flag_init(t_cmd *cmd);
 void	flag_checker(t_cmd *cmd);
 void    flag_checker2(t_cmd *cmd);
 void    print_flags(t_cmd *cmd);

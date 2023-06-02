@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/05/30 12:40:29 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/02 15:28:37 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,20 @@ void    ft_strstr(t_cmd *cmd, int j, int i, char **parsed)
         x++;
     }
     if (cmd->f->re_out == 1)
-    {
-        cmd->output = malloc(strlen(parsed[i - 1]) + 1);
-        ft_strcpy(cmd->output, parsed[i - 1]);
+    {   
+        if (parsed[j + 1])
+        {
+            cmd->output = malloc(strlen(parsed[i - 1]) + 1);
+            ft_strcpy(cmd->output, parsed[i - 1]);
+        }
+        else
+        {
+            printf("syntax error near unexpected token `newline'\n");
+            cmd->syntax_err = 1;
+        } 
     }
     else if (cmd->f->re_in == 1)
-    {
+    {   
         cmd->input = malloc(strlen(parsed[i - 1]) + 1);
         ft_strcpy(cmd->input, parsed[i - 1]);
     }
