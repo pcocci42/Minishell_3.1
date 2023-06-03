@@ -6,28 +6,11 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 14:31:07 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 14:45:59 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
-
-
-char    *remove_tilde(char *str)
-{
-    int i = 0;
-    int j = 1;
-    char *new;
-    int len = ft_strlen(str);
-    new = malloc(sizeof(char) * len);
-    while (str[i])
-    {
-        new[i] = str[j];
-        i++;
-        j++;
-    }
-    return(new);
-}
 
 char   *ft_getenv(t_cmd *cmd, char *to_print)
 {
@@ -133,7 +116,5 @@ void    custom_commands(t_cmd *cmd, char **parsed, char **envp)  // hard coded c
     ft_echo(cmd, parsed);
     ft_export(cmd, parsed, envp);
     ft_env(cmd, parsed, envp);
-    /* if (ft_strncmp(parsed[0], "unset", 5) == 0)
-        ft_unset(parsed, envp); */
     exit(0);
 }
