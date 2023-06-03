@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 13:40:53 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 14:31:07 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,11 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
         g_exitstatus = 1;
         return ;
     }
-	else
-	{   
-        if (parsed[n][0] == '$' && parsed[n][1] != '?')
+        while (parsed[n] != 0)
         {
-            parsed[n]++;
-            while (parsed[n] != 0) //  e non si arriva al prossimo commando 
+            if (parsed[n][0] == '$' && parsed[n][1] != '?') //  e non si arriva al prossimo commando 
             {   
-                /* printf("%s\n", cmd->parsed[j+n]); */
+                parsed[n]++;
                 if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
                 {
                     if (ft_strchr(parsed[n], 18))
@@ -77,9 +74,7 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
                 }
                 n++;
             }
-        }
-        else
-            while (parsed[n] != 0)
+            else
             {
                 if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
                 { 
@@ -133,8 +128,12 @@ void    custom_commands(t_cmd *cmd, char **parsed, char **envp)  // hard coded c
 {
     if (ft_strncmp(parsed[0], "pwd", 3) == 0)
         ft_pwd();
+    if (ft_strncmp(parsed[0], "exit", 4) == 0)
+        ft_exit();
     ft_echo(cmd, parsed);
     ft_export(cmd, parsed, envp);
     ft_env(cmd, parsed, envp);
+    /* if (ft_strncmp(parsed[0], "unset", 5) == 0)
+        ft_unset(parsed, envp); */
     exit(0);
 }

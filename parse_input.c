@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/03 13:49:11 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 14:16:21 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,8 @@ void    parse_input(t_cmd *cmd, char **envp)
     look_var(cmd);
     if (ft_strcmp(cmd->box[0][0], "export") == 0)
         look_var_envp(cmd, envp);
+    if (ft_strncmp(cmd->box[0][0], "unset", 5) == 0)
+        ft_unset(cmd->box[0], envp);
     flag_init(cmd);
     cmd->output = NULL;
     cmd->input = NULL;
@@ -226,7 +228,6 @@ void    parse_input(t_cmd *cmd, char **envp)
     }
     else
         execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
-    //print_envp2(envp); 
     cmd->output = NULL;
     cmd->input = NULL;
     flag_init(cmd);

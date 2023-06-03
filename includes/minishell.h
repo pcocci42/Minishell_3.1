@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 13:21:06 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 14:12:20 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,12 @@ void    ft_exit();
 int     check_cd(char **parsed);
 int     printDirectoryContents(char **parsed);
 void    ft_cd(char **parsed);
-void    ft_unset(t_cmd *cmd);
 void    ft_prova_redirect(t_cmd *cmd, int j);
 void    handle_input_redirection(char* filename) ;
 void    handle_output_redirection(char* filename);
 void    handle_input_heredoc(char* delimiter);
 void    handle_output_append_redirection(char* filename);
+void	ft_unset(char **parsed, char **envp);
 
 // ENVIRON
 int    check_environ_ez(t_cmd *cmd, int j, char **parsed);

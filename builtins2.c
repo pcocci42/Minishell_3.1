@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 12:46:52 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 14:34:46 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,95 +26,55 @@ void    ft_env(t_cmd *cmd, char **parsed, char **envp)
         g_exitstatus = 130;
 }
 
-void    ft_unset_envp1(t_cmd *cmd, int x)
-{
-	char	**new_env;
-	int		i;
-	int		j;
-	int		sp;
-
-	i = -1;
-	j = 0;
-	if (!cmd->parsed[x])
-		return ;
-	while (cmd->envp[++i])
-		if (ft_strcmp(take_var(cmd->envp[i]), cmd->parsed[x]) == 0)
-			break ;
-	sp = i;
-	if (!cmd->envp[i])
-		return ;
-	while (cmd->envp[i])
+void	delete_content(char *str)
+{	
+	int i;
+	char *tmp;
+	i = 0;
+	while (str[i] != '=')
 		i++;
-	new_env = ft_calloc(sizeof(char *), i);
-	i = -1;
-	while (cmd->envp[++i])
-		if (i != sp)
-			new_env[j++] = cmd->envp[i];
-	cmd->envp = new_env;
+	tmp = malloc((sizeof(char)) * (i + 2));
+	i = 0;
+	while (str[i] != '=')
+	{
+		tmp[i] = str[i];
+		i++;
+	}
+	tmp[i] = '=';
+	tmp[i + 1] = 0;
+	//printf("%s\n", tmp);
+	ft_strcpy(str, tmp);
 }
 
-void    ft_unset_envp2(t_cmd *cmd, int x)
+void	ft_unset(char **parsed, char **envp)
 {
-	char	**new_env;
-	int		i;
-	int		j;
-	int		sp;
+	int i;
+	int j;
 
-	i = -1;
-	j = 0;
-	if (!cmd->parsed[x])
-		return ;
-	while (cmd->envp2[++i])
-		if (ft_strcmp(take_var(cmd->envp2[i]), cmd->parsed[x]) == 0)
-			break ;
-	sp = i;
-	if (!cmd->envp2[i])
-		return ;
-	while (cmd->envp2[i])
-		i++;
-	new_env = ft_calloc(sizeof(char *), i);
-	i = -1;
-	while (cmd->envp2[++i])
-		if (i != sp)
-			new_env[j++] = cmd->envp2[i];
-	cmd->envp2 = new_env;
+	i = 0;
+	j = 1;
+	while (parsed[j])
+	{
+		i = 0;
+		while (envp[i])
+		{
+			if (ft_strcmp(parsed[j], take_var(envp[i])) == 0)
+				delete_content(envp[i]);
+			i++;
+		}
+		j++;
+	}
+	i = 0;
+	j = 1;
+	while (parsed[j])
+	{
+		i = 0;
+		while (environ[i])
+		{	
+			if (ft_strcmp(parsed[j], take_var(environ[i])) == 0)
+				delete_content(environ[i]);
+			i++;
+		}
+		j++;
+	}
 }
-
-/* void    ft_unset(t_cmd *cmd, char **parsed)
-{
-    int i;
-
-    i = 1;
-    while (ft_strncmp(parsed[0], "unset", 5) == 0 && parsed[i])
-    {
-        ft_unset_envp1(cmd,i);
-        ft_unset_envp2(cmd,i);
-        i++;
-    }
-} */
-
-// void    ft_prova_redirect(t_cmd *cmd)
-// {
-// 	if (ft_strncmp(cmd->parsed[j], "<<", 2) == 0)
-//     {
-//        handle_input_heredoc(cmd->parsed[j+1]);
-//     }
-//     else if (ft_strncmp(cmd->parsed[j], ">>", 2) == 0)
-//     {
-//        handle_output_append_redirection(cmd->parsed[j+1]);
-//     }
-//     else if (ft_strncmp(cmd->parsed[j], "<", 1) == 0)
-//     {
-//        handle_input_redirection(cmd->parsed[j+1]);
-//     }
-//     else if (ft_strncmp(cmd->parsed[j], ">", 1) == 0)
-//     {
-//        handle_output_redirection(cmd->parsed[j+1]);
-//     }
-//     else if (ft_strncmp(cmd->parsed[j], "|", 1) == 0)
-//     {
-//     //    pipala;
-//     }
-//     else
-//         return;
-// }
