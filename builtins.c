@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/02 14:52:19 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 13:40:53 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,12 +131,10 @@ void    ft_echo(t_cmd *cmd, char **parsed)
 
 void    custom_commands(t_cmd *cmd, char **parsed, char **envp)  // hard coded commands;
 {
-    if (ft_strncmp(parsed[0], "exit", 6) == 0)
-        ft_exit(cmd->parsed);
     if (ft_strncmp(parsed[0], "pwd", 3) == 0)
         ft_pwd();
     ft_echo(cmd, parsed);
     ft_export(cmd, parsed, envp);
-    ft_env(cmd, parsed);
+    ft_env(cmd, parsed, envp);
     exit(0);
 }

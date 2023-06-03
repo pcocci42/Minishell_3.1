@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/02 15:22:19 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 13:21:06 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,9 @@ void	print_envp2(char **envp);
 
 // BUILTINS AND REDIRECTIONS
 
-void    ft_env(t_cmd *cmd, char **parsed);
+void    ft_env(t_cmd *cmd, char **parsed, char **envp);
 void    ft_pwd();
-void    ft_exit(char **parsed);
+void    ft_exit();
 int     check_cd(char **parsed);
 int     printDirectoryContents(char **parsed);
 void    ft_cd(char **parsed);
@@ -139,6 +139,9 @@ int    check_environ(t_cmd *cmd, int j, char **parsed);
 int    check_environ2(t_cmd *cmd, int j, char **parsed);
 int ft_putenv_ez(char *name, t_cmd *cmd);
 int ft_putenv(char *name, char *value, t_cmd *cmd);
+void	look_var_envp(t_cmd *cmd, char **envp);
+void	up_environ(char *current);
+void	up_envp(char *current, char **envp);
 
 // UTILS
 

@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:58:54 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/01 17:20:51 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 12:22:20 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,27 @@ void	print_envp2(char **envp)
 	}
 }
 
-void	up_envp(char *current)
+void	ft_realloc(char **env)
+{
+	int i;
+	int j;
+	char **copy;
+	i = 0;
+	j = 0;
+	while (env[i])
+		i++;
+	copy = malloc((sizeof(char *)) * (i + 1));
+	j = i + 1;
+	i = 0;
+	while (env[i])
+	{
+		copy[i] = env[i];
+		i++;
+	}
+	copy[j] = NULL;
+}
+
+void	up_environ(char *current)
 {
 	int i;
 	int flag;
@@ -227,16 +247,57 @@ void	up_envp(char *current)
 			break ;
 		}
 	}
-	printf("%s\n", environ[i]);
-	printf("%s\n", current);
-	//printf("%d\n", i);
-	/* if (flag == 0)
-		envp = malloc((sizeof(char *)) * (i + 1)); */
 	environ[i] = malloc((sizeof(char)) * (ft_strlen(current) + 1));
 	ft_strcpy(environ[i], current);
-	printf("%s\n", environ[i]);
-	environ[i + 1] = NULL;
-	printf("%s\n", environ[i+1]);
+	if (flag == 0)
+		environ[i + 1] = NULL;
+}
+
+void	up_envp(char *current, char **envp)
+{
+	int i;
+	int flag;
+
+	i = 0;
+	flag = 0;
+	while (envp[i])
+	{
+		if (ft_strcmp(take_var(envp[i]), take_var(current)) != 0)
+		{
+			i++;
+		}
+		else
+		{	
+			flag = 1;
+			break ;
+		}
+	}
+	envp[i] = malloc((sizeof(char)) * (ft_strlen(current) + 1));
+	ft_strcpy(envp[i], current);
+	if (flag == 0)
+		envp[i + 1] = NULL;
+}
+
+void	look_var_envp(t_cmd *cmd, char **envp)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (cmd->box[i])
+	{	
+		j = 0;
+		while (cmd->box[i][j])
+		{	
+			if (check_var(cmd->box[i][j]) == 1)
+			{
+				up_envp(cmd->box[i][j], envp);
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
 void	look_var(t_cmd *cmd)
@@ -253,7 +314,7 @@ void	look_var(t_cmd *cmd)
 		{	
 			if (check_var(cmd->box[i][j]) == 1)
 			{
-				up_envp(cmd->box[i][j]);
+				up_environ(cmd->box[i][j]);
 			}
 			j++;
 		}

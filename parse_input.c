@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/02 16:04:20 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 13:49:11 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,20 @@ int   ft_chr(char *cmd, char c, int i)
 void    convert_dquote(t_cmd *cmd)
 {
     int i;
-    int flag;
+    int j;
 
-    flag = 0;
+    j = 0;
     i = 0;
     {
         while (cmd->cmd[i])
         {
             if (cmd->cmd[i] == '"' && cmd->squote == 0)
             {   
-                cmd->cmd[i] = ' ';
+                if (cmd->cmd[i - 1] != '=')
+                    cmd->cmd[i] = ' ';
+                else
+                    cmd->cmd[i] = 19;
+                j = i -1;
                 i++;
                 cmd->squote = 0;
                 if (ft_chr(cmd->cmd, '"', i) == 0)
@@ -48,12 +52,19 @@ void    convert_dquote(t_cmd *cmd)
                         cmd->cmd[i] = 18;
                     i++;
                 }
-                cmd->cmd[i] = ' ';
+                if (cmd->cmd[j] != '=')
+                    cmd->cmd[i] = ' ';
+                else
+                    cmd->cmd[i] = 19;
                 cmd->dquote = 0;
             }
             else if (cmd->cmd[i] == '\'' && cmd->dquote == 0)
             {
-                cmd->cmd[i] = ' ';
+                if (cmd->cmd[i - 1] != '=')
+                    cmd->cmd[i] = ' ';
+                else
+                    cmd->cmd[i] = 19;
+                j = i -1;
                 i++;
                 cmd->dquote = 0;
                 if (ft_chr(cmd->cmd, '\'', i) == 0)
@@ -68,7 +79,10 @@ void    convert_dquote(t_cmd *cmd)
                         cmd->cmd[i] = 20;
                     i++;
                 }
-                cmd->cmd[i] = ' ';
+                if (cmd->cmd[j] != '=')
+                    cmd->cmd[i] = ' ';
+                else
+                    cmd->cmd[i] = 19;
                 cmd->squote = 0;
             }
             i++;
@@ -194,20 +208,16 @@ void    add_spaces(t_cmd *cmd)
 
 void    parse_input(t_cmd *cmd, char **envp)
 {   
-    //envp = NULL;
     convert(cmd);
     count_pipes(cmd);
     split_pipes(cmd);
-    //print_parsed_box(cmd);
-    //print_envp2(envp);
-    //printf("###########################\n");
+    add_spaces(cmd);
     look_var(cmd);
-    //printf("###########################\n");
-    //print_envp2(envp);
+    if (ft_strcmp(cmd->box[0][0], "export") == 0)
+        look_var_envp(cmd, envp);
     flag_init(cmd);
     cmd->output = NULL;
     cmd->input = NULL;
-    add_spaces(cmd);
     if (ft_strcmp(cmd->box[0][0], "cd") == 0)
     {
         ft_cd(cmd->box[0]);

@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/02 15:58:45 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 13:41:23 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
             close(input_fd);
 
             // Redirect output
-            if (i == last_command_index && cmd->output != NULL) {
+            if (i == last_command_index && cmd->output != NULL) 
+            {
                 if (cmd->f->append_out)
                     output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_APPEND, 0644);
                 else
@@ -123,9 +124,13 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
-            } else if (i == last_command_index && cmd->output == NULL) {
+            } 
+            else if (i == last_command_index && cmd->output == NULL) 
+            {
                 output_fd = original_stdout;
-            } else if (i < num_pipes) {
+            } 
+            else if (i < num_pipes) 
+            {
                 close(pipe_fds[i][0]);
                 output_fd = pipe_fds[i][1];
             }
@@ -144,7 +149,8 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
                 perror("execve");
             }
             else
-            {   
+            {
+                //print_envp2(envp);
                 custom_commands(cmd, cmd->box[i], envp);
             }
             if (i > 0) 

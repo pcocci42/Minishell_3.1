@@ -6,24 +6,23 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/05/31 12:46:54 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 12:46:52 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void    ft_env(t_cmd *cmd, char **parsed)
+void    ft_env(t_cmd *cmd, char **parsed, char **envp)
 {
     int i;
 
     i = 0;
     if (ft_strcmp(parsed[0], "env") == 0  && (parsed[1] == NULL || cmd->f->re_out == 1))
     {
-        while (cmd->envp2[i])
-            printf("%s\n", cmd->envp2[i++]);
+        print_envp2(envp);
         g_exitstatus = 0;
     }
-    else if (ft_strcmp(parsed[0], "env") == 0  && cmd->parsed[1] != NULL)
+    else if (ft_strcmp(parsed[0], "env") == 0  && parsed[1] != NULL)
         g_exitstatus = 130;
 }
 

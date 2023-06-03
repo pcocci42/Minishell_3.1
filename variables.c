@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 12:56:15 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/02 15:39:14 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 13:47:16 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,35 +64,13 @@ void    add_lst_ez(t_cmd *cmd, char *parsed)
 void    ft_export(t_cmd *cmd, char **parsed, char **envp)
 {   
     int i;
-    (void)envp;
+    
     i = 0;
     if (ft_strcmp(parsed[0], "export") == 0 && (parsed[1] == NULL || cmd->f->re_out == 1))
     {
-        while (environ[i])
-            printf("declare -x %s\n", environ[i++]);
+        while (envp[i])
+            printf("declare -x %s\n", envp[i++]);
     }
-    else if (ft_strcmp(parsed[0], "export") == 0)
-    {   
-        i = 1;
-        //printf("%s\n", parsed[i]);
-        while (parsed[i])
-        {   
-            if (check_var(parsed[i]) == 1)
-            {   
-                printf("check var ok\n");
-                export_full(cmd, i, parsed);
-            }
-            else if (check_var(parsed[i]) == 0 && check_list(cmd,i, parsed) == 0) 
-            {
-                if(check_environ_ez(cmd,i, parsed) == 0)
-                {
-                    ft_putenv_ez(parsed[i], cmd);
-                    add_lst_ez(cmd, parsed[i]);
-                }
-            }
-            i++;
-        }
-    }       
 }
 
 void    export_full(t_cmd *cmd, int i, char **parsed)

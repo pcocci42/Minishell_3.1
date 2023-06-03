@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/02 13:59:37 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/03 13:20:58 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ void    ft_pwd()
         g_exitstatus = 1;
 }
 
-void    ft_exit(char **parsed)
+void    ft_exit()
 {  
-        free(parsed);
         printf("exit\n");
         kill(0,SIGUSR1);
 }
