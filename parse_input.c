@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/04 14:54:15 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 16:04:37 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,15 +214,20 @@ void    parse_input(t_cmd *cmd, char **envp)
     split_pipes(cmd);
     if (cmd->box[0][0] == NULL)
         return ;
+    cmd->output = NULL;
+    cmd->input = NULL;
     add_spaces(cmd);
     look_var(cmd);
+    if (ft_strcmp(cmd->box[0][0], "<<") == 0)
+    {
+        handle_here_doc_input(cmd->box[0][1]);
+        cmd->input = "heredoc_tmp.txt";
+    }
     if (ft_strcmp(cmd->box[0][0], "export") == 0)
         look_var_envp(cmd, envp);
     if (ft_strncmp(cmd->box[0][0], "unset", 5) == 0)
         ft_unset(cmd->box[0], envp);
     flag_init(cmd);
-    cmd->output = NULL;
-    cmd->input = NULL;
     if (ft_strcmp(cmd->box[0][0], "cd") == 0)
     {
         ft_cd(cmd->box[0]);
@@ -230,6 +235,7 @@ void    parse_input(t_cmd *cmd, char **envp)
             cmd->box++;
     }
     execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
+    unlink("heredoc_tmp.txt");
     cmd->output = NULL;
     cmd->input = NULL;
     flag_init(cmd);

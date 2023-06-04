@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/04 14:34:41 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 16:04:21 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,156 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
 
 
     for (int i = 0; i <= num_pipes; i++) 
+    {   
+        int x = is_there_more_commands(cmd, cmd->box[i]);
+        if (x > 0)
+        {
+            check_redirects_out(cmd, cmd->box[i]);
+            cmd->box[i] = cmd->new_cmd;
+        }
+        if (cmd->syntax_err == 1)
+            return ; 
+        pid = fork();
+        if (pid < 0) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            //printf("index of box %d\n", i);
+            // Child process
+            // Redirect input
+            if (ft_strcmp(cmd->box[0][0], "<<") == 0) 
+            {   
+                input_fd = open("heredoc_tmp.txt", O_RDONLY);
+                cmd->f->write_in = 1;
+                //printf( "<< %d\n", input_fd);
+                if (input_fd == -1) {
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+            }
+            if (i == 0 && cmd->input != NULL) 
+            {
+                input_fd = open(cmd->input, O_RDONLY);
+                if (input_fd == -1) {
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+                //printf("i= 0 %d\n", input_fd);
+            } else if (i > 0 && cmd->f->write_in == 0) 
+            {
+                close(pipe_fds[i - 1][1]);
+                input_fd = pipe_fds[i - 1][0];
+                //printf("i > 0 %d\n", input_fd);
+            }
+
+            dup2(input_fd, STDIN_FILENO);
+            close(input_fd);
+
+            // Redirect output
+            if (i == last_command_index && cmd->output != NULL) 
+            {
+                if (cmd->f->append_out)
+                    output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                else
+                    output_fd = open(cmd->output, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+                if (output_fd == -1) {
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+            } 
+            else if (i == last_command_index && cmd->output == NULL) 
+            {
+                output_fd = original_stdout;
+            } 
+            else if (i < num_pipes) 
+            {
+                close(pipe_fds[i][0]);
+                output_fd = pipe_fds[i][1];
+            }
+
+            dup2(output_fd, STDOUT_FILENO);
+            close(output_fd);
+
+            // Execute the command
+            if (check_cmds(cmd->box[i], 0) == 1 &&  check_var_loop(cmd->box[i]) == 0 && is_valid_command(cmd->box[i][0]) == 0)
+            {   
+                //printf("at command %d\n", input_fd);
+                expand_var(cmd);
+                if (ft_strchr(commands[i][0], '/'))
+                    execve((commands[i][0]), commands[i], environ);
+                else
+                    execve(find_command_path(commands[i][0]), commands[i], environ);
+                perror("execve");
+            }
+            else
+            {
+                //print_envp2(envp);
+                custom_commands(cmd, cmd->box[i], envp);
+            }
+            if (i > 0) 
+            {
+                close(pipe_fds[i - 1][0]);
+            }
+            if (i < num_pipes) 
+            {
+                close(pipe_fds[i][1]);
+            }
+        } else {
+            // Parent process
+            if (i > 0) {
+                close(pipe_fds[i - 1][0]);
+                close(pipe_fds[i - 1][1]);
+            }
+        }
+    }
+    // Wait for all child processes to complete
+    for (int i = 0; i <= num_pipes; i++) {
+        wait(NULL);
+    }
+    // Restore the original stdout
+    dup2(original_stdout, STDOUT_FILENO);
+    close(original_stdout);
+}
+
+void handle_here_doc_input(const char* delimiter) {
+    int input_fd = open("heredoc_tmp.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (input_fd == -1) {
+        perror("open");
+        exit(EXIT_FAILURE);
+    }
+
+    // Read lines from stdin until delimiter is encountered
+    char* line;
+    while ((line = readline("> ")) != NULL) {
+        if (strcmp(line, delimiter) == 0) {
+            free(line);
+            break;
+        }
+        write(input_fd, line, strlen(line));
+        write(input_fd, "\n", 1);
+        free(line);
+    }
+
+    close(input_fd);
+}
+
+/* void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp) 
+{
+    int input_fd = STDIN_FILENO;
+    int output_fd = STDOUT_FILENO;
+    int original_stdout = dup(STDOUT_FILENO);
+    int last_command_index = num_pipes;
+    pid_t pid;
+    int pipe_fds[num_pipes][2];
+    for (int i = 0; i < num_pipes; i++) {
+        if (pipe(pipe_fds[i]) == -1) {
+            perror("pipe");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    for (int i = 0; i <= num_pipes; i++) 
     {
         int x = is_there_more_commands(cmd, cmd->box[i]);
         if (x > 0)
@@ -99,10 +249,13 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
             // Child process
             // Redirect input
             if (i == 0 && cmd->input != NULL) {
-                input_fd = open(cmd->input, O_RDONLY);
-                if (input_fd == -1) {
-                    perror("open");
-                    exit(EXIT_FAILURE);
+                } else {
+                    // Normal file input
+                    input_fd = open(cmd->input, O_RDONLY);
+                    if (input_fd == -1) {
+                        perror("open");
+                        exit(EXIT_FAILURE);
+                    }
                 }
             } else if (i > 0) {
                 close(pipe_fds[i - 1][1]);
@@ -176,5 +329,5 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
     // Restore the original stdout
     dup2(original_stdout, STDOUT_FILENO);
     close(original_stdout);
-}
+} */
 

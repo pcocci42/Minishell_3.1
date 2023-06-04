@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 14:12:20 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 15:41:34 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ void    handle_input_redirection(char* filename) ;
 void    handle_output_redirection(char* filename);
 void    handle_input_heredoc(char* delimiter);
 void    handle_output_append_redirection(char* filename);
+void    handle_here_doc_input(const char* delimiter);
 void	ft_unset(char **parsed, char **envp);
 
 // ENVIRON
