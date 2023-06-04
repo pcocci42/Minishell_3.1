@@ -1,3 +1,4 @@
-attacare i parsed dopo il primo indice in caso di vari apici
-rifare tutto lo stesso per i doppi apici
-fare split basato sulla quantita' del tipo di apici
+Echo $ = $ (al momento stampa NULL, perche cerca una variabile anche se dopo $ non c'e nulla)
+Error Message sui comandi che non sono comandi
+Leaks
+Scomporre funzioni grosse

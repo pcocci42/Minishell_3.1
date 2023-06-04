@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/04 17:45:29 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 17:46:44 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ void    parse_input(t_cmd *cmd, char **envp)
     cmd->input = NULL;
     add_spaces(cmd);
     look_var(cmd);
+    flag_init(cmd);
     if (ft_strcmp(cmd->box[0][0], "<<") == 0)
     {
         handle_here_doc_input(cmd->box[0][1]);
@@ -214,7 +215,6 @@ void    parse_input(t_cmd *cmd, char **envp)
         look_var_envp(cmd, envp);
     if (ft_strncmp(cmd->box[0][0], "unset", 5) == 0)
         ft_unset(cmd->box[0], envp);
-    flag_init(cmd);
     if (ft_strcmp(cmd->box[0][0], "cd") == 0)
     {
         ft_cd(cmd->box[0]);
