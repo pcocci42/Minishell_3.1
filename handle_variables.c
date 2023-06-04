@@ -6,32 +6,11 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:58:54 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 12:22:20 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 17:44:54 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
-
-int	count_args(const char *str, char c)
-{
-	int	i;
-	int	trigger;
-
-	i = 0;
-	trigger = 0;
-	while (*str)
-	{
-		if (*str != c && trigger == 0)
-		{
-			trigger = 1;
-			i++;
-		}
-		else if (*str == c)
-			trigger = 0;
-		str++;
-	}
-	return (i);
-}
 
 int	check_var(char *parsed)
 {
@@ -96,51 +75,6 @@ char	*take_content(char *parsed)
 	return (content);
 }
 
-void	handle_var(char **parsed, t_cmd *cmd)
-{
-	int i;
-	t_var *copy;
-	t_var *current;
-	
-	i = 0;
-	cmd->var_count = 0;
-	copy = cmd->variable;
-    while (parsed[i])
-	{
-        if (check_var(parsed[i]) == 1) 
-		{
-            current = copy;
-			cmd->var_count++;
-            while (current) {
-                if (ft_strcmp(take_var(parsed[i]), current->nome) == 0) 
-				{
-                    current->content = take_content(parsed[i]);
-                    break;
-                }
-                current = current->next;
-            }
-            if (!current) {
-                // Variable not found, create a new one
-                t_var *new_var = ft_lst(take_var(parsed[i]), take_content(parsed[i]));
-                if (copy) {
-                    while (copy->next) {
-                        copy = copy->next;
-                    }
-                    copy->next = new_var;
-                } else {
-                    copy = new_var;
-                }
-            }
-        }
-        i++;
-    }
-    cmd->variable = copy; 
-	//checks
-	//ft_lstprint(cmd->variable);
-	//i = ft_lstcount(cmd->variable);
-	//printf("%d\n", i);
-}
-
 int is_valid_command(const char* string) 
 {
     // Check if the string contains the '=' character
@@ -169,7 +103,6 @@ int is_valid_command(const char* string)
                         free(full_path);
                         return 0; // Valid command in PATH
                     }
-
                     free(full_path);
                 }
                 dir = strtok(NULL, ":");

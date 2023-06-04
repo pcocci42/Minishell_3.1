@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/04 16:56:50 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 17:45:29 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,19 +166,6 @@ void    split_pipes(t_cmd *cmd)
         i++;
     }
     free(split_pipes);
-}
-
-void    variables(t_cmd *cmd, char ***box)
-{   
-    int i;
-
-    i = 0;
-    while (box[i])
-    {   
-        //printf("maybe\n");
-        handle_var(box[i], cmd);
-        i++;
-    }
 }
 
 void    add_spaces(t_cmd *cmd)
