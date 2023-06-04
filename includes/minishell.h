@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/04 15:41:34 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 16:53:14 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,16 @@ void    handle_input_heredoc(char* delimiter);
 void    handle_output_append_redirection(char* filename);
 void    handle_here_doc_input(const char* delimiter);
 void	ft_unset(char **parsed, char **envp);
+//EXE
+
+void redirect_input(int i, t_cmd* cmd, int pipe_fds[][2]);
+void redirect_output(int i, int last_command_index, t_cmd* cmd, int pipe_fds[][2], int original_stdout);
+void execute_child_process(int i, char*** commands, t_cmd* cmd, char** environ, char** envp);
+void close_pipe_fds(int i, int num_pipes, int pipe_fds[][2]);
+void restore_stdout(int original_stdout);
+char    *find_command_path(const char* command);
+void    expand_var(t_cmd *cmd);
+void execute_command2(char*** commands, t_cmd *cmd, int num_pipes, char **envp);
 
 // ENVIRON
 int    check_environ_ez(t_cmd *cmd, int j, char **parsed);
