@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/03 13:41:23 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 14:34:41 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
     int output_fd = STDOUT_FILENO;
     int original_stdout = dup(STDOUT_FILENO);
     int last_command_index = num_pipes;
-
+    pid_t pid;
     int pipe_fds[num_pipes][2];
     for (int i = 0; i < num_pipes; i++) {
         if (pipe(pipe_fds[i]) == -1) {
@@ -91,7 +91,7 @@ void execute_command(char*** commands, t_cmd *cmd, int num_pipes, char **envp)
         }
         if (cmd->syntax_err == 1)
             return ; 
-        pid_t pid = fork();
+        pid = fork();
         if (pid < 0) {
             perror("fork");
             exit(EXIT_FAILURE);

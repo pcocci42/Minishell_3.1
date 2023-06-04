@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/03 14:16:21 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 14:54:15 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void    print_parsed_box(t_cmd *cmd)
     i = 0;
     int j = 0;
     //printf("%d\n", cmd->nbr_pipe);
+    printf("ciao");
     while (cmd->box[i])
     {   
         j = 0;
@@ -211,6 +212,8 @@ void    parse_input(t_cmd *cmd, char **envp)
     convert(cmd);
     count_pipes(cmd);
     split_pipes(cmd);
+    if (cmd->box[0][0] == NULL)
+        return ;
     add_spaces(cmd);
     look_var(cmd);
     if (ft_strcmp(cmd->box[0][0], "export") == 0)
@@ -226,8 +229,7 @@ void    parse_input(t_cmd *cmd, char **envp)
         if (cmd->box[1] != NULL)
             cmd->box++;
     }
-    else
-        execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
+    execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
     cmd->output = NULL;
     cmd->input = NULL;
     flag_init(cmd);

@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 14:34:46 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/04 14:32:59 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,26 @@ void	delete_content(char *str)
 	ft_strcpy(str, tmp);
 }
 
+void unset_enviroment(char* varname, char** envp) 
+{
+    int index = 0;
+    int found = 0;
+
+    while (envp[index] != NULL) 
+	{
+        if (strncmp(envp[index], varname, strlen(varname)) == 0 && envp[index][strlen(varname)] == '=') 
+		{
+            for (int i = index; envp[i] != NULL; i++) 
+			{
+                envp[i] = envp[i + 1];
+            }
+            found = 1;
+            break;
+        }
+        index++;
+    }
+}
+
 void	ft_unset(char **parsed, char **envp)
 {
 	int i;
@@ -59,7 +79,7 @@ void	ft_unset(char **parsed, char **envp)
 		while (envp[i])
 		{
 			if (ft_strcmp(parsed[j], take_var(envp[i])) == 0)
-				delete_content(envp[i]);
+				unset_enviroment(parsed[j], envp);
 			i++;
 		}
 		j++;
@@ -72,7 +92,7 @@ void	ft_unset(char **parsed, char **envp)
 		while (environ[i])
 		{	
 			if (ft_strcmp(parsed[j], take_var(environ[i])) == 0)
-				delete_content(environ[i]);
+				unset_enviroment(parsed[j], environ);
 			i++;
 		}
 		j++;
