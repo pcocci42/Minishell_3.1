@@ -6,27 +6,11 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/03 14:45:59 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/05 10:29:28 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
-
-char   *ft_getenv(t_cmd *cmd, char *to_print)
-{
-    t_var *tmp;
-    char *value;
-
-    tmp = cmd->variable;
-    while (cmd->variable)
-    {
-        if (ft_strcmp(to_print, cmd->variable->nome) == 0)
-            value = cmd->variable->content;
-        cmd->variable = cmd->variable->next;
-    }
-    cmd->variable = tmp;
-    return (value);
-}
 
 void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
 {

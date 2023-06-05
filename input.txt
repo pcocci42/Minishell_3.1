@@ -1,3 +1,2 @@
-       1
-input.txt
-input.txt
+       2
+       2      18     132

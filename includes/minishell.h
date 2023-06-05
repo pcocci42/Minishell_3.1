@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/04 16:53:14 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/05 10:59:39 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,16 @@ typedef struct s_flags t_flags;
 extern int g_exitstatus;
 extern char **environ;
 
-typedef struct s_var {
+typedef struct s_exe {
 
-    char    *nome;
-    char    *content;
-    t_var   *next;
-}   t_var;
+    int input_fd;
+    int output_fd;
+    int original_stdout;
+    int num_pipes;
+    int last_command_index ;
+    pid_t pid;
+    
+}   t_exe;
 
 typedef struct s_cmd {
 
@@ -62,7 +66,6 @@ typedef struct s_cmd {
     char    **new_cmd;
     char    *output;
     char    *input;
-    t_var   *variable;
     t_flags *f;
 }   t_cmd;
 
@@ -112,7 +115,7 @@ void    process_input(t_cmd *cmd, char **parsed);
 void    exeArgs(t_cmd *cmd, int j, int i);
 void	ft_strcpy(char *dst, const char *src);
 char    *find_command_path(const char* command);
-void    execute_command(char*** commands, t_cmd *cmd, int num_pipe, char **envp);
+void    execute_command(t_cmd *cmd, int num_pipe, char **envp);
 void	look_var(t_cmd *cmd);
 void	print_envp2(char **envp);
 
@@ -133,8 +136,6 @@ void    handle_here_doc_input(const char* delimiter);
 void	ft_unset(char **parsed, char **envp);
 //EXE
 
-void redirect_input(int i, t_cmd* cmd, int pipe_fds[][2]);
-void redirect_output(int i, int last_command_index, t_cmd* cmd, int pipe_fds[][2], int original_stdout);
 void execute_child_process(int i, char*** commands, t_cmd* cmd, char** environ, char** envp);
 void close_pipe_fds(int i, int num_pipes, int pipe_fds[][2]);
 void restore_stdout(int original_stdout);

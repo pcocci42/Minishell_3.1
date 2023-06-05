@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/04 14:45:19 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/05 10:28:51 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,7 @@ void   my_envp_init(t_cmd *cmd, char **envp)
         cmd->envp2[i] = envp[i];
         i++;
     }
-    cmd->variable = ft_lst("testa", "testa");
     cmd->f = malloc(sizeof(t_flags));
-    cmd->f->in = dup(STDIN_FILENO);
-    cmd->f->out = dup(STDOUT_FILENO);
 }
 
 int main(int ac, char **av, char **envp)

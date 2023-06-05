@@ -6,13 +6,13 @@
 #    By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 12:45:42 by lmasetti          #+#    #+#              #
-#    Updated: 2023/06/04 17:41:09 by paolococci       ###   ########.fr        #
+#    Updated: 2023/06/05 10:30:20 by paolococci       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 SRCS = main.c builtins.c builtins2.c builtins3.c check_builtins.c execute.c \
-		ft_split.c handle_variables.c lst_utils.c lst_utils2.c \
+		ft_split.c handle_variables.c \
 		parse_input.c redirect.c new_process.c \
 		utils2.c utils.c utilscalloc.c utilsflags.c variables.c variables2.c utils_path.c path.c pipe.c
 

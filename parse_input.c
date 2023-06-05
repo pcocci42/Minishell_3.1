@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/04 17:46:44 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/05 10:52:20 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void    parse_input(t_cmd *cmd, char **envp)
         if (cmd->box[1] != NULL)
             cmd->box++;
     }
-    execute_command(cmd->box, cmd, cmd->nbr_pipe, envp);
+    execute_command(cmd, cmd->nbr_pipe, envp);
     unlink("heredoc_tmp.txt");
     cmd->output = NULL;
     cmd->input = NULL;
