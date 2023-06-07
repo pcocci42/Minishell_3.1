@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/07 16:44:14 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 17:30:51 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,74 @@ int   ft_chr(char *cmd, char c, int i)
     return (1);
 }
 
+void    handle_dquote(t_cmd *cmd)
+{
+    if (cmd->cmd[cmd->ints->i - 1] != '=')
+        cmd->cmd[cmd->ints->i] = ' ';
+    else
+        cmd->cmd[cmd->ints->i] = 19;
+    cmd->ints->j = cmd->ints->i -1;
+    cmd->ints->i++;
+    cmd->squote = 0;
+    if (ft_chr(cmd->cmd, '"', cmd->ints->i) == 0)
+        cmd->dquote = 1;
+    while (cmd->cmd[cmd->ints->i] != '"' && cmd->dquote == 1)
+    {
+        if (cmd->cmd[cmd->ints->i] == ' ')
+            cmd->cmd[cmd->ints->i] = 17;
+        if (cmd->cmd[cmd->ints->i] == '|')
+            cmd->cmd[cmd->ints->i] = 18;
+        if (cmd->cmd[cmd->ints->i] == 20)
+            cmd->cmd[cmd->ints->i] = '$';
+        cmd->ints->i++;
+    }
+    if (cmd->cmd[cmd->ints->j] != '=')
+        cmd->cmd[cmd->ints->i] = ' ';
+    else
+        cmd->cmd[cmd->ints->i] = 19;
+    cmd->dquote = 0;
+}
+
+void    handle_squote(t_cmd *cmd)
+{
+    if (cmd->cmd[cmd->ints->i- 1] != '=')
+        cmd->cmd[cmd->ints->i] = ' ';
+    else
+        cmd->cmd[cmd->ints->i] = 19;
+    cmd->ints->j = cmd->ints->i -1;
+    cmd->ints->i++;
+    cmd->dquote = 0;
+    if (ft_chr(cmd->cmd, '\'', cmd->ints->i) == 0)
+        cmd->squote = 1;
+    while (cmd->cmd[cmd->ints->i] != '\'' && cmd->squote == 1)
+    {
+        if (cmd->cmd[cmd->ints->i] == ' ')
+            cmd->cmd[cmd->ints->i] = 17;
+        if (cmd->cmd[cmd->ints->i] == '|')
+            cmd->cmd[cmd->ints->i] = 18;
+        if  (cmd->cmd[cmd->ints->i] == '$')
+            cmd->cmd[cmd->ints->i] = 20;
+        cmd->ints->i++;
+    }
+    if (cmd->cmd[cmd->ints->j] != '=')
+        cmd->cmd[cmd->ints->i] = ' ';
+    else
+        cmd->cmd[cmd->ints->i] = 19;
+    cmd->squote = 0;
+}
+
 void    convert_dquote(t_cmd *cmd)
 {
-    int i;
-    int j;
-
-    j = 0;
-    i = 0;
+    cmd->ints = malloc(sizeof(t_int));
+    cmd->ints->j = 0;
+    cmd->ints->i = 0;
     {
-        while (cmd->cmd[i])
+        while (cmd->cmd[cmd->ints->i])
         {
-            if (cmd->cmd[i] == '"' && cmd->squote == 0)
+            if (cmd->cmd[cmd->ints->i] == '"' && cmd->squote == 0)
             {   
-                if (cmd->cmd[i - 1] != '=')
+                handle_dquote(cmd);
+                /* if (cmd->cmd[i - 1] != '=')
                     cmd->cmd[i] = ' ';
                 else
                     cmd->cmd[i] = 19;
@@ -60,11 +115,12 @@ void    convert_dquote(t_cmd *cmd)
                     cmd->cmd[i] = ' ';
                 else
                     cmd->cmd[i] = 19;
-                cmd->dquote = 0;
+                cmd->dquote = 0; */
             }
-            else if (cmd->cmd[i] == '\'' && cmd->dquote == 0)
+            else if (cmd->cmd[cmd->ints->i] == '\'' && cmd->dquote == 0)
             {   
-                if (cmd->cmd[i - 1] != '=')
+                handle_squote(cmd);
+                /* if (cmd->cmd[i - 1] != '=')
                     cmd->cmd[i] = ' ';
                 else
                     cmd->cmd[i] = 19;
@@ -87,9 +143,9 @@ void    convert_dquote(t_cmd *cmd)
                     cmd->cmd[i] = ' ';
                 else
                     cmd->cmd[i] = 19;
-                cmd->squote = 0;
+                cmd->squote = 0; */
             }
-            i++;
+            cmd->ints->i++;
         }
     }
 }
@@ -111,8 +167,6 @@ void    print_parsed_box(t_cmd *cmd)
     int i;
     i = 0;
     int j = 0;
-    //printf("%d\n", cmd->nbr_pipe);
-    printf("ciao");
     while (cmd->box[i])
     {   
         j = 0;

@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/07 16:21:47 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 17:22:33 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ typedef struct s_index {
     int i_out;
 }   t_index;
 
+typedef struct s_int {
+
+    int i;
+    int j;
+}   t_int;
+
 typedef struct s_cmd {
 
     char    *cmd;
@@ -73,6 +79,7 @@ typedef struct s_cmd {
     char    *output;
     char    *input;
     t_index *index;
+    t_int   *ints;
     t_flags *f;
 }   t_cmd;
 
