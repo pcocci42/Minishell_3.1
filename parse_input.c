@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/05 10:52:20 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 14:49:39 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,38 @@ void    add_spaces(t_cmd *cmd)
     }
 }
 
+void    look_here_doc(t_cmd *cmd)
+{
+    int i;
+    int j;
+    
+    i = 0;
+    j = 0;
+    while (cmd->box[i])
+    {
+        while (cmd->box[i][j])
+        {
+            if (ft_strcmp(cmd->box[i][j], "<<") == 0)
+            {
+                handle_here_doc_input(cmd->box[i][j+ 1]);
+                j = 1;
+                while (cmd->box[i][j])
+                {
+                    cmd->box[i][j] = NULL;
+                }
+                printf("%s\n", cmd->box[i][0]);
+                cmd->f->write_in = 1;
+                cmd->input = "heredoc_tmp.txt";
+                break ;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+
+
 void    parse_input(t_cmd *cmd, char **envp)
 {   
     convert(cmd);
@@ -206,11 +238,12 @@ void    parse_input(t_cmd *cmd, char **envp)
     add_spaces(cmd);
     look_var(cmd);
     flag_init(cmd);
-    if (ft_strcmp(cmd->box[0][0], "<<") == 0)
+    look_here_doc(cmd);
+    /* if (ft_strcmp(cmd->box[0][0], "<<") == 0)
     {
         handle_here_doc_input(cmd->box[0][1]);
         cmd->input = "heredoc_tmp.txt";
-    }
+    } */
     if (ft_strcmp(cmd->box[0][0], "export") == 0)
         look_var_envp(cmd, envp);
     if (ft_strncmp(cmd->box[0][0], "unset", 5) == 0)

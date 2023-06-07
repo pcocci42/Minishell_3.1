@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/02 15:28:37 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 14:41:31 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int    is_there_more_commands(t_cmd *cmd, char **parsed)
         {
             cmd->f->re_in = 1;
             //cmd->f->append_out = 1;
-            return(i);
+            return(0);
         }
         if(strcmp(parsed[i], ">>") == 0)
         {

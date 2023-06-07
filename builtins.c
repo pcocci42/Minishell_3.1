@@ -6,11 +6,40 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/05 10:29:28 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 15:07:41 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
+
+void    echo_dollar(char **parsed, int n, int flag)
+{
+    if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
+    {
+        if (ft_strchr(parsed[n], 18))
+            printf("|"); 
+        printf("%s", getenv(parsed[n]));
+        //perror("getenv");
+        flag = 1;
+        if (parsed[n + 1] != 0)
+            printf(" ");
+    }
+}
+
+void    echo_no_dollar(char **parsed, int n, int flag)
+{
+    if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
+    { 
+        if (ft_strchr(parsed[n], 18))
+            printf("|");
+        if (ft_strchr(parsed[n], 20))
+            printf("$"); 
+        printf("%s", parsed[n]);
+        flag = 1;
+        if (parsed[n + 1] != 0)
+            printf(" ");
+    }
+}
 
 void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
 {
@@ -25,11 +54,12 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
         return ;
     }
         while (parsed[n] != 0)
-        {
+        {   
             if (parsed[n][0] == '$' && parsed[n][1] != '?') //  e non si arriva al prossimo commando 
             {   
                 parsed[n]++;
-                if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
+                echo_dollar(parsed, n, flag);
+                /*if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
                 {
                     if (ft_strchr(parsed[n], 18))
                         printf("|"); 
@@ -38,22 +68,23 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
                     flag = 1;
                     if (parsed[n + 1] != 0)
                         printf(" ");
-                }
+                }*/
                 n++;
             }
             else
-            {
-                if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
+            {   
+                echo_no_dollar(parsed, n, flag);
+                /* if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
                 { 
                     if (ft_strchr(parsed[n], 18))
                         printf("|");
                     if (ft_strchr(parsed[n], 20))
                         printf("$"); 
                     printf("%s", parsed[n]);
-                    // flag = 1;
+                    flag = 1;
                     if (parsed[n + 1] != 0)
                         printf(" ");
-                }
+                } */
                 n++;
             }
 	}
@@ -68,6 +99,8 @@ void    ft_echo(t_cmd *cmd, char **parsed)
     {
         if (!parsed[1])
             printf("\n");
+        else if (ft_strcmp(parsed[1], "$") == 0 && !parsed[2])
+            printf("$\n");
         else if (ft_strncmp(parsed[1], "-n", 2) == 0)
         {
             if(ft_strncmp(parsed[2], "$?", 2) == 0)
