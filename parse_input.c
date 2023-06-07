@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/07 14:49:39 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 16:44:14 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,17 @@ void    convert_dquote(t_cmd *cmd)
                 i++;
                 cmd->squote = 0;
                 if (ft_chr(cmd->cmd, '"', i) == 0)
+                {
                     cmd->dquote = 1;
+                }
                 while (cmd->cmd[i] != '"' && cmd->dquote == 1)
                 {
                     if (cmd->cmd[i] == ' ')
                         cmd->cmd[i] = 17;
                     if (cmd->cmd[i] == '|')
                         cmd->cmd[i] = 18;
+                    if (cmd->cmd[i] == 20)
+                        cmd->cmd[i] = '$';
                     i++;
                 }
                 if (cmd->cmd[j] != '=')
@@ -59,7 +63,7 @@ void    convert_dquote(t_cmd *cmd)
                 cmd->dquote = 0;
             }
             else if (cmd->cmd[i] == '\'' && cmd->dquote == 0)
-            {
+            {   
                 if (cmd->cmd[i - 1] != '=')
                     cmd->cmd[i] = ' ';
                 else
@@ -208,15 +212,22 @@ void    look_here_doc(t_cmd *cmd)
             if (ft_strcmp(cmd->box[i][j], "<<") == 0)
             {
                 handle_here_doc_input(cmd->box[i][j+ 1]);
-                j = 1;
-                while (cmd->box[i][j])
-                {
+                if (j == 0)
+                {   
                     cmd->box[i][j] = NULL;
                 }
-                printf("%s\n", cmd->box[i][0]);
-                cmd->f->write_in = 1;
-                cmd->input = "heredoc_tmp.txt";
-                break ;
+                else 
+                {
+                    j = 1;
+                    while (cmd->box[i][j])
+                    {
+                        cmd->box[i][j] = NULL;
+                    }
+                    //printf("%s\n", cmd->box[i][0]);
+                    cmd->f->write_in = 1;
+                    cmd->input = "heredoc_tmp.txt";
+                    break ;
+                }
             }
             j++;
         }
@@ -231,14 +242,18 @@ void    parse_input(t_cmd *cmd, char **envp)
     convert(cmd);
     count_pipes(cmd);
     split_pipes(cmd);
+
     if (cmd->box[0][0] == NULL)
         return ;
     cmd->output = NULL;
     cmd->input = NULL;
     add_spaces(cmd);
+    //print_parsed_box(cmd);
     look_var(cmd);
     flag_init(cmd);
     look_here_doc(cmd);
+    if (cmd->box[0][0] == NULL)
+        return ;
     /* if (ft_strcmp(cmd->box[0][0], "<<") == 0)
     {
         handle_here_doc_input(cmd->box[0][1]);

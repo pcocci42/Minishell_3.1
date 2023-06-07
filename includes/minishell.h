@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/05 12:57:37 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 16:21:47 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 void    parsing(t_cmd   *cmd);
 char	*ft_strchr(const char *s, int c);
+int   ft_chr(char *cmd, char c, int i);
 
 
 // LISTE VARIABILI

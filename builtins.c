@@ -6,23 +6,69 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/07 15:07:41 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/07 16:55:55 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void    echo_dollar(char **parsed, int n, int flag)
-{
+void    ft_putstr(char *parsed);
+
+char    *ft_putstr_quota(char *parsed)
+{   
+    int i;
+    char *var;
+
+    var = malloc((sizeof(char)) * ft_strlen(parsed));
+    i = 0;
+    while (parsed[i] && parsed[i] != '\'')
+    {
+        if (parsed[i] == 18)
+            parsed[i] = '|';
+        var[i] = parsed[i];
+        i++;
+    }
+    var[i] = 0;
+    ft_strcpy(parsed, var);
+    free(var);
+    return (parsed);
+}
+
+void    echo_dollar(char **parsed, int n, int flag, int squote)
+{   
     if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
     {
-        if (ft_strchr(parsed[n], 18))
-            printf("|"); 
-        printf("%s", getenv(parsed[n]));
-        //perror("getenv");
+        if (squote == 0)
+        {
+            ft_putstr(getenv(parsed[n]));
+        }
+        else
+        {   
+            parsed[n] = ft_putstr_quota(parsed[n]);
+            parsed[n]++;
+            printf("\'");
+            printf("%s", getenv(parsed[n]));
+            printf("\'");
+        }
         flag = 1;
         if (parsed[n + 1] != 0)
             printf(" ");
+    }
+}
+
+void    ft_putstr(char *parsed)
+{   
+    int i;
+
+    i = 0;
+    while (parsed[i])
+    {
+        if (parsed[i] == 20)
+            parsed[i] = '$';
+        if (parsed[i] == 18)
+            parsed[i] = '|';
+        write(1, &parsed[i], 1);
+        i++;
     }
 }
 
@@ -30,11 +76,12 @@ void    echo_no_dollar(char **parsed, int n, int flag)
 {
     if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
     { 
-        if (ft_strchr(parsed[n], 18))
+        /* if (ft_strchr(parsed[n], 18))
             printf("|");
         if (ft_strchr(parsed[n], 20))
             printf("$"); 
-        printf("%s", parsed[n]);
+        printf("%s", parsed[n]);  */
+        ft_putstr(parsed[n]);
         flag = 1;
         if (parsed[n + 1] != 0)
             printf(" ");
@@ -55,36 +102,21 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **parsed)
     }
         while (parsed[n] != 0)
         {   
-            if (parsed[n][0] == '$' && parsed[n][1] != '?') //  e non si arriva al prossimo commando 
+            if (parsed[n][0] == '$' && parsed[n][1] != '?')
             {   
                 parsed[n]++;
-                echo_dollar(parsed, n, flag);
-                /*if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
-                {
-                    if (ft_strchr(parsed[n], 18))
-                        printf("|"); 
-                    printf("%s", getenv(parsed[n]));
-                    //perror("getenv");
-                    flag = 1;
-                    if (parsed[n + 1] != 0)
-                        printf(" ");
-                }*/
+                echo_dollar(parsed, n, flag, 0);
+                n++;
+            }
+            else if (parsed[n][0] == '\'' && parsed[n][1] == '$' && ft_chr(parsed[n], '\'', 1) == 0)
+            {
+                parsed[n] += 1;
+                echo_dollar(parsed, n, flag, 1);
                 n++;
             }
             else
             {   
                 echo_no_dollar(parsed, n, flag);
-                /* if (ft_strncmp(parsed[n], "-n", 2) != 0 || flag == 1)
-                { 
-                    if (ft_strchr(parsed[n], 18))
-                        printf("|");
-                    if (ft_strchr(parsed[n], 20))
-                        printf("$"); 
-                    printf("%s", parsed[n]);
-                    flag = 1;
-                    if (parsed[n + 1] != 0)
-                        printf(" ");
-                } */
                 n++;
             }
 	}
