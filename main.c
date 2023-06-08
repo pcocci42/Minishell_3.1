@@ -6,98 +6,80 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/05 10:28:51 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/09 00:12:24 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-int g_exitstatus;
+int			g_exitstatus;
 
-extern char **environ;
+extern char	**environ;
 
-void    take_input(t_cmd *cmd, char **envp)
-{   
-    char *shell_prompt;
-    char *tmp;
+void	take_input(t_cmd *cmd, char **envp)
+{
+	char	*shell_prompt;
+	char	*tmp;
 
-    shell_prompt = "@minishell:> \033[0;37m";
+	shell_prompt = "@minishell:> \033[0;37m";
 	tmp = ft_strjoin("\033[1;32m", getenv("LOGNAME"));
 	shell_prompt = ft_strjoin(tmp, shell_prompt);
-    cmd->cmd = readline(shell_prompt);
-    if (cmd->cmd == NULL)
-    {   
-        kill(0, SIGUSR1);
-    }
-    if (ft_strlen(cmd->cmd) != 0)
-    {
-        add_history(cmd->cmd);
-        parse_input(cmd, envp);
-        //process_input(cmd);
-    }
+	free(tmp);
+	cmd->cmd = readline(shell_prompt);
+	if (cmd->cmd == NULL)
+	{	
+		free(cmd->cmd);
+		free(shell_prompt);
+		free(cmd);
+		exit(0);
+	}
+	if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)
+	{	
+		add_history(cmd->cmd);
+		parse_input(cmd, envp);
+	}
+	else if (ft_strlen(cmd->cmd) == 0)
+		return ;
+	free(shell_prompt);
 }
 
-void    loop(t_cmd *cmd, char **envp)
-{   
-    
-    struct sigaction action;
-    action.sa_handler = handler;
-    while(1)
-    {   
-        sigaction(SIGINT, &action, NULL);
-        sigaction(SIGUSR1, &action, NULL);
-        signal(SIGQUIT, SIG_IGN);
-        take_input(cmd, envp);
-    }
-}
-
-void    handler(int sig_num)
+void	loop(t_cmd *cmd, char **envp)
 {
-    if (sig_num == SIGINT)
-    {   
-        printf("\n");
-	    rl_replace_line("", 0);
-	    rl_on_new_line();
-	    rl_redisplay();
-    }
-    else if (sig_num == SIGUSR1)
-    {   
-        exit(g_exitstatus);
-    }
-    else
-        return;
+	while (1)
+	{
+		take_input(cmd, envp);
+		if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)
+			free_altro(cmd);
+	}
 }
 
-void   my_envp_init(t_cmd *cmd, char **envp)
-{   
-    int i;
-
-    i = 0;
-    cmd->envp = envp;
-    while (envp[i])
-    {   
-        i++;
-    }
-    cmd->envp2 = malloc(sizeof(char *) * i + 1);
-    i = 0;
-    while (envp[i])
-    {
-        cmd->envp2[i] = envp[i];
-        i++;
-    }
-    cmd->f = malloc(sizeof(t_flags));
+void	signal_handler(int sig_num)
+{
+	if (sig_num == SIGINT)
+	{
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (sig_num == SIGUSR1)
+		exit(0);
+	else
+		return ;
 }
 
-int main(int ac, char **av, char **envp)
-{   
-    (void)ac;
-    (void)av;
-    t_cmd *cmd;
-    
-    cmd = malloc(sizeof(t_cmd));
-    clear();
-    g_exitstatus = 0;
-    my_envp_init(cmd, envp);
-    loop(cmd, envp);
-    exit(g_exitstatus);
+int	main(int ac, char **av, char **envp)
+{
+	t_cmd	*cmd;
+
+	(void) ac;
+	(void) av;
+	cmd = malloc(sizeof(t_cmd));
+	g_exitstatus = 0;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, signal_handler);
+	cmd->count = 0;
+	loop(cmd, envp);
+	free(cmd);
+	exit(g_exitstatus);
 }

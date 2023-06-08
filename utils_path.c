@@ -6,12 +6,11 @@
 /*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 11:11:08 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/05/24 15:48:50 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:58:41 by lmasetti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
-
 
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
