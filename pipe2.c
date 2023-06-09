@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/08 22:59:21 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/09 13:47:00 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	checking_redir(t_cmd *cmd, int i)
 {
 	int	x;
 
-	if (cmd->hd_j == 0)
 	{
 		if (count_redir(cmd, i) <= 1)
 		{

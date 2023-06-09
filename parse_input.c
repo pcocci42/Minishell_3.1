@@ -6,7 +6,7 @@
 /*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/09 00:11:04 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/09 13:45:45 by paolococci       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	add_spaces(t_cmd *cmd)
 void	ft_parse_input1(t_cmd *cmd)
 {	
 	cmd->count++;
-	search_here(cmd);
+	//search_here(cmd);
 	convert(cmd);
 	count_pipes(cmd);
 	split_pipes(cmd);
@@ -93,10 +93,8 @@ void	ft_parse_input1(t_cmd *cmd)
 	look_var(cmd);
 	cmd->f = malloc(sizeof(t_flags));
 	flag_init(cmd);
-	out_heredoc(cmd);
+	//out_heredoc(cmd);
 	look_here_doc(cmd, 0, 0);
-	if (cmd->hd_j != 0)
-		cmd->input = cmd->output;
 }
 
 void	parse_input(t_cmd *cmd, char **envp)
