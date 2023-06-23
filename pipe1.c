@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/08 17:57:53 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 10:55:09 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	check_malloc(char *full_path, char *path)
 	{
 		perror("malloc");
 		free(path);
+		free(full_path);
 		return (1);
 	}
 	return (0);
@@ -90,7 +91,6 @@ int	count_redir(t_cmd *cmd, int i)
 	int	j;
 	int	count;
 
-	cmd->index = malloc(sizeof(t_index));
 	j = 0;
 	count = 0;
 	cmd->index->i_in = 0;
@@ -110,6 +110,7 @@ int	count_redir(t_cmd *cmd, int i)
 		}
 		j++;
 	}
-	free(cmd->index);
+	if (count == 0)
+		flag_init(cmd);
 	return (count);
 }

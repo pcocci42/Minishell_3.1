@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/09 13:47:00 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/23 10:24:49 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,26 @@ void	checking_redir(t_cmd *cmd, int i)
 {
 	int	x;
 
-	{
-		if (count_redir(cmd, i) <= 1)
+	if (cmd->hd_i != 1)
+	{	
+		//while (cmd->box[i])
 		{
-			x = is_there_more_commands(cmd, cmd->box[i]);
-			if (x > 0)
+			if (count_redir(cmd, i) <= 1)
 			{
-				check_redirects_out(cmd, cmd->box[i], 0, 0);
-				cmd->box[i] = cmd->new_cmd;
+				x = is_there_more_commands(cmd, cmd->box[i]);
+				if (x > 0 || !cmd->box[i + 1])
+				{
+					if (check_redirects_out(cmd, cmd->box[i], 0, 0) == 1)
+						new_cmd(cmd, i);
+					else
+						free_dpointer(cmd->new_cmd);
+				}
 			}
-		}
-		else
-		{
-			many_redir(cmd, i);
-			cmd->box[i] = cmd->new_cmd;
+			else
+			{	
+				many_redir(cmd, i);
+			}
+			//i++;
 		}
 	}
 }

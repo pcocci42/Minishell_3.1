@@ -3,35 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/09 00:12:24 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/23 10:59:50 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-int			g_exitstatus;
-
 extern char	**environ;
+int	g_fine;
 
 void	take_input(t_cmd *cmd, char **envp)
 {
-	char	*shell_prompt;
 	char	*tmp;
 
-	shell_prompt = "@minishell:> \033[0;37m";
+	cmd->shell_prompt = "@minishell:> \033[0;37m";
 	tmp = ft_strjoin("\033[1;32m", getenv("LOGNAME"));
-	shell_prompt = ft_strjoin(tmp, shell_prompt);
+	cmd->shell_prompt = ft_strjoin(tmp, cmd->shell_prompt);
 	free(tmp);
-	cmd->cmd = readline(shell_prompt);
+	cmd->cmd = readline(cmd->shell_prompt);
 	if (cmd->cmd == NULL)
 	{	
-		free(cmd->cmd);
-		free(shell_prompt);
-		free(cmd);
-		exit(0);
+		ft_done(cmd);
+		//free_dpointer(envp);
 	}
 	if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)
 	{	
@@ -40,7 +36,7 @@ void	take_input(t_cmd *cmd, char **envp)
 	}
 	else if (ft_strlen(cmd->cmd) == 0)
 		return ;
-	free(shell_prompt);
+	free(cmd->shell_prompt);
 }
 
 void	loop(t_cmd *cmd, char **envp)
@@ -48,8 +44,10 @@ void	loop(t_cmd *cmd, char **envp)
 	while (1)
 	{
 		take_input(cmd, envp);
-		if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)
+		if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)	
 			free_altro(cmd);
+		if (g_fine == 0)
+			break ;
 	}
 }
 
@@ -63,7 +61,9 @@ void	signal_handler(int sig_num)
 		rl_redisplay();
 	}
 	else if (sig_num == SIGUSR1)
+	{	
 		exit(0);
+	}
 	else
 		return ;
 }
@@ -75,11 +75,12 @@ int	main(int ac, char **av, char **envp)
 	(void) ac;
 	(void) av;
 	cmd = malloc(sizeof(t_cmd));
-	g_exitstatus = 0;
+	cmd->index = malloc(sizeof(t_index));
+	g_fine = 1;
+	cmd->exitstatus = 0;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, signal_handler);
 	cmd->count = 0;
 	loop(cmd, envp);
-	free(cmd);
-	exit(g_exitstatus);
+	exit(0);
 }

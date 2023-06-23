@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_process.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/08 12:40:43 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/06/23 10:47:37 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	is_there_more_commands(t_cmd *cmd, char **parsed)
 			cmd->f->re_out = 1;
 			cmd->f->append_out = 1;
 		}
-		if (cmd->f->re_out == 1 || cmd->f->re_in == 1)
+		if (cmd->f->re_out == 1 || (cmd->f->re_in == 1 && !parsed[i + 1]))
 			return (i);
 		i++;
 	}
@@ -79,12 +79,14 @@ void	ft_strstr(t_cmd *cmd, int j, int i, char **parsed)
 {
 	int	x;
 
-	cmd->input = NULL;
-	cmd->output = NULL;
+	/* cmd->input = NULL;
+	cmd->output = NULL; */
 	x = 0;
+	
 	while (x < j)
 	{
-		cmd->new_cmd[x] = ft_strdup(parsed[x]);
+		cmd->new_cmd[x] = malloc((sizeof(char *)) * (ft_strlen(parsed[x]) + 1));
+		ft_strcpy(cmd->new_cmd[x], parsed[x]);
 		x++;
 	}
 	if (cmd->f->re_out == 1)
@@ -98,11 +100,15 @@ void	ft_strstr(t_cmd *cmd, int j, int i, char **parsed)
 		}
 	}
 	else if (cmd->f->re_in == 1)
-		cmd->input = ft_strdup(parsed[i - 1]);
+	{
+		cmd->input = malloc((sizeof(char *)) * (ft_strlen(parsed[i -1]) + 1));
+		ft_strcpy(cmd->input, parsed[i -1]);
+		printf("ciao\n");
+	}
 	cmd->new_cmd[j] = NULL;
 }
 
-void	check_redirects_out(t_cmd *cmd, char **parsed, int i, int j)
+int	check_redirects_out(t_cmd *cmd, char **parsed, int i, int j)
 {
 	int	flag;
 
@@ -127,4 +133,5 @@ void	check_redirects_out(t_cmd *cmd, char **parsed, int i, int j)
 	}
 	cmd->new_cmd = malloc((i + 1) * sizeof(char *));
 	ft_strstr(cmd, j, i, parsed);
+	return (flag);
 }

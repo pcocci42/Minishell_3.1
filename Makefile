@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+         #
+#    By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 12:45:42 by lmasetti          #+#    #+#              #
-#    Updated: 2023/06/09 00:19:17 by paolococci       ###   ########.fr        #
+#    Updated: 2023/06/23 10:10:19 by pcocci           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,5 +37,8 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+valgrind:
+	valgrind -s --leak-check=full --show-leak-kinds=all --suppressions=./readline.supp --track-origins=yes ./minishell
 
 .PHONY: all clean fclean re .c.o

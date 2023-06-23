@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilscalloc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 15:06:14 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/08 12:13:10 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/06/23 10:33:28 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,12 @@ char	*ft_strdup(const char *s)
 	}
 	str[i] = '\0';
 	return (str);
+}
+
+void	free_in_out(t_cmd *cmd)
+{
+	if (cmd->input && ft_strcmp(cmd->input, "heredoc_tmp.txt") != 0)
+		free(cmd->input);
+	if (cmd->output)
+		free(cmd->output);
 }

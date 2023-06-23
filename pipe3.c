@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/08 23:05:06 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/09 14:54:52 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ void	redirect_output(t_cmd *cmd, t_exe *exe, int i, int pipe_fds[i][2])
 	}
 }
 
-void	handle_here_doc_input(const char	*delimiter, t_cmd *cmd)
+void	handle_here_doc_input(const char	*delimiter, t_cmd *cmd, int j, int i)
 {
 	int		input_fd;
 	char	*line;
 
-	input_fd = in_fd(cmd);
+	input_fd = in_fd(cmd, j, i);
 	if (input_fd == -1)
 	{	
 		perror("open");

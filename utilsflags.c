@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilsflags.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:27:05 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/09 00:15:15 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/21 18:06:44 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	flag_init(t_cmd *cmd)
 	cmd->f->re_out = 0;
 	cmd->f->write_in = 0;
 	cmd->syntax_err = 0;
+	cmd->hd_j = 0;
+	cmd->hd_i = 0;
 }
 
 void	free_box(t_cmd *cmd)
@@ -32,28 +34,32 @@ void	free_box(t_cmd *cmd)
 	i = 0;
 	j = 0;
 	while (cmd->box[i])
-	{
-		while (cmd->box[i][j])
+	{	
+		j = 0;
 		{
-			free(cmd->box[i][j]);
-			j++;
+			while (cmd->box[i][j])
+			{
+				{
+					free(cmd->box[i][j]);
+				}
+				j++;
+			}
 		}
 		i++;
 	}
-	/* i = 0;
+	i = 0;
 	while (cmd->box[i])
-	{
+	{	
 		free(cmd->box[i]);
 		i++;
-	} */
+	}
+	free(cmd->box[i]);
 	free(cmd->box);
 }
 
 void	free_altro(t_cmd *cmd)
 {
 	free(cmd->f);
-	free(cmd->input);
-	free(cmd->output);
 	free_box(cmd);
 }
 
@@ -69,5 +75,6 @@ void	free_dpointer(char **dpoint)
 		free(dpoint[i]);
 		i++;
 	}
+	free(dpoint[i]);
 	free(dpoint);
 }

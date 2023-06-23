@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/09 13:45:45 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/23 10:35:37 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	split_pipes(t_cmd *cmd)
 		free(split_pipes[i]);
 		i++;
 	}
+	free(split_pipes[i]);
 	free(split_pipes);
 }
 
@@ -78,10 +79,9 @@ void	add_spaces(t_cmd *cmd)
 	}
 }
 
-void	ft_parse_input1(t_cmd *cmd)
+void	ft_parse_input1(t_cmd *cmd, char **envp)
 {	
 	cmd->count++;
-	//search_here(cmd);
 	convert(cmd);
 	count_pipes(cmd);
 	split_pipes(cmd);
@@ -90,16 +90,15 @@ void	ft_parse_input1(t_cmd *cmd)
 	cmd->output = NULL;
 	cmd->input = NULL;
 	add_spaces(cmd);
-	look_var(cmd);
+	look_var(cmd, envp);
 	cmd->f = malloc(sizeof(t_flags));
 	flag_init(cmd);
-	//out_heredoc(cmd);
 	look_here_doc(cmd, 0, 0);
 }
 
 void	parse_input(t_cmd *cmd, char **envp)
 {
-	ft_parse_input1(cmd);
+	ft_parse_input1(cmd, envp);
 	if (cmd->box[0][0] == NULL)
 		return ;
 	if (ft_strcmp(cmd->box[0][0], "export") == 0)
@@ -112,9 +111,10 @@ void	parse_input(t_cmd *cmd, char **envp)
 		if (cmd->box[1] != NULL)
 			cmd->box++;
 	}
+	if (ft_strncmp(cmd->box[0][0], "exit", 4) == 0)
+		ft_exit(cmd);
 	execute_command(cmd, cmd->nbr_pipe, envp);
+	free_in_out(cmd);
 	unlink("heredoc_tmp.txt");
-	cmd->output = NULL;
-	cmd->input = NULL;
 	flag_init(cmd);
 }

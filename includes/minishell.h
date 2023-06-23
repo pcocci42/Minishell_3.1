@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/09 00:02:33 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/21 17:30:34 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 typedef struct s_var	t_var;
 typedef struct s_flags	t_flags;
 
-extern int				g_exitstatus;
+extern int				g_fine;
 extern char				**environ;
 
 typedef struct s_exe {
@@ -53,7 +53,10 @@ typedef struct s_int {
 
 typedef struct s_cmd {
 	char	*cmd;
+	char	*shell_prompt;
+	int		fine;
 	int		count;
+	int		exitstatus;
 	char	**parsed;
 	char	**var;
 	char	**envp;
@@ -69,6 +72,7 @@ typedef struct s_cmd {
 	int		hd_i;
 	int		hd_j;
 	int		tmp;
+	int		f_echo;
 	t_exe	exe;
 	t_index	*index;
 	t_flags	*f;
@@ -93,7 +97,7 @@ int		is_valid_command(const char	*string);
 void	variables(t_cmd	*cmd, char	***box);
 int		is_there_more_commands(t_cmd *cmd, char **parsed);
 void	ft_strstr(t_cmd *cmd, int j, int i, char **parsed);
-void	check_redirects_out(t_cmd *cmd, char **parsed, int i, int j);
+int		check_redirects_out(t_cmd *cmd, char **parsed, int i, int j);
 int		check_exe(char **parsed);
 void	exe_cmd_usr(char **parsed, char *command, char **envp);
 void	cmd_not_found(char **cmd);
@@ -120,17 +124,21 @@ void	process_input(t_cmd *cmd, char **parsed);
 void	exeargs(t_cmd *cmd);
 void	ft_strcpy(char *dst, const char *src);
 void	execute_command(t_cmd *cmd, int num_pipe, char **envp);
-void	look_var(t_cmd *cmd);
+void	look_var(t_cmd *cmd, char **envp);
 void	print_envp2(char **envp);
 void	convert(t_cmd *cmd);
 void	convert_dquote(t_cmd *cmd);
 int		ft_chr(char *cmd, char c, int i);
 char	*ft_strdup(const char *s);
+void	ft_done(t_cmd *cmd);
+void	free_in_out(t_cmd *cmd);
+void	new_cmd(t_cmd *cmd, int i);
+void	many_cmd(t_cmd *cmd, int i);
 
 // BUILTINS AND REDIRECTIONS
 
 void	ft_env(t_cmd *cmd, char **parsed, char **envp);
-void	ft_pwd(void);
+void	ft_pwd(t_cmd *cmd);
 void	ft_exit(t_cmd *cmd);
 int		check_cd(char **parsed);
 int		printDirectoryContents(char **parsed);
@@ -183,6 +191,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len);
 void	parsing(t_cmd *cmd);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_getenv(char *var, char **envp);
 
 // PIPE
 void	checking_redir(t_cmd *cmd, int i);
@@ -217,19 +226,20 @@ void	print_flags(t_cmd *cmd);
 
 // HEREDOC
 void	look_here_doc(t_cmd *cmd, int i, int j);
-void	handle_here_doc_input(const char	*delimiter, t_cmd *cmd);
+void	handle_here_doc_input(const char *delimiter, t_cmd *cmd, int j, int i);
 void	out_heredoc(t_cmd *cmd);
-int		in_fd(t_cmd *cmd);
-int		out_heredoc_help(t_cmd *cmd, int i, int j, int count);
+int		in_fd(t_cmd *cmd, int j, int i);
+void	out_heredoc_help(t_cmd *cmd, int i, int j);
 void	search(t_cmd *cmd, int i, int j);
 void	print_parsed_box(t_cmd *cmd);
 void	search_here(t_cmd *cmd);
+void	alloc_out(t_cmd *cmd, int i, int j);
 
 // BUILTINS
-int		check_echo(char **parsed, int n);
+int		check_echo(char **parsed, int n, t_cmd *cmd);
 void	echo_no_dollar(char **parsed, int n, int flag);
 void	ft_putstr(char *parsed);
-void	echo_dollar(char **parsed, int n, int flag, int squote);
+void	echo_dollar(char **parsed, int n, t_cmd *cmd, int squote);
 char	*ft_putstr_quota(char *parsed);
 void	write_line(int input_fd, char *line);
 

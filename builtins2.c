@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paolococci <paolococci@student.42.fr>      +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/08 21:17:55 by paolococci       ###   ########.fr       */
+/*   Updated: 2023/06/09 14:45:47 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	ft_env(t_cmd *cmd, char **parsed, char **envp)
 			|| cmd->f->re_out == 1))
 	{
 		print_envp2(envp);
-		g_exitstatus = 0;
+		cmd->exitstatus = 0;
 	}
 	else if (ft_strcmp(parsed[0], "env") == 0 && parsed[1] != NULL)
-		g_exitstatus = 130;
+		cmd->exitstatus = 130;
 }
 
 void	delete_content(char *str)
