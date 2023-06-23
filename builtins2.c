@@ -6,22 +6,24 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/09 14:45:47 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:36:59 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
 void	ft_env(t_cmd *cmd, char **parsed, char **envp)
-{
+{	
+	(void)envp;
+
 	if (ft_strcmp(parsed[0], "env") == 0 && (parsed[1] == NULL
 			|| cmd->f->re_out == 1))
 	{
-		print_envp2(envp);
-		cmd->exitstatus = 0;
+		print_envp2(cmd->cpy_env);
+		g_exitstatus = 0;
 	}
 	else if (ft_strcmp(parsed[0], "env") == 0 && parsed[1] != NULL)
-		cmd->exitstatus = 130;
+		g_exitstatus = 130;
 }
 
 void	delete_content(char *str)
@@ -58,10 +60,15 @@ void	unset_enviroment(char	*varname, char	**envp)
 			&& envp[index][strlen(varname)] == '=')
 		{	
 			i = index;
-			while (envp[i] != NULL)
+			if (envp[i + 1] != NULL)
 			{
-				envp[i] = envp[i + 1];
-				i++;
+				//envp[i] = envp[i + 1];
+				ft_strcpy(envp[i], envp[i + 1]);
+			}
+			else
+			{	
+				free(envp[i]);
+				envp[i] = NULL;
 			}
 			found = 1;
 			break ;
@@ -70,7 +77,7 @@ void	unset_enviroment(char	*varname, char	**envp)
 	}
 }
 
-void	unset_environ(char **parsed, int i, int j)
+/* void	unset_environ(char **parsed, int i, int j)
 {	
 	char	*var;
 
@@ -87,16 +94,18 @@ void	unset_environ(char **parsed, int i, int j)
 		}
 		j++;
 	}
-}
+} */
 
-void	ft_unset(char **parsed, char **envp)
+void	ft_unset(char **parsed, t_cmd *cmd)
 {
 	int		i;
 	int		j;
 	char	*var;
+	char	**envp;
 
 	i = 0;
 	j = 1;
+	envp = cmd->cpy_env;
 	while (parsed[j])
 	{
 		i = 0;
@@ -104,7 +113,10 @@ void	ft_unset(char **parsed, char **envp)
 		{	
 			var = take_var(envp[i]);
 			if (ft_strcmp(parsed[j], var) == 0)
+			{	
+				//unset_update(cmd, i);
 				unset_enviroment(parsed[j], envp);
+			}
 			free(var);
 			i++;
 		}
@@ -112,5 +124,5 @@ void	ft_unset(char **parsed, char **envp)
 	}
 	i = 0;
 	j = 1;
-	unset_environ(parsed, i, j);
+	//unset_environ(parsed, i, j);
 }

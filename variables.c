@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 12:56:15 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/23 10:58:36 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:43:08 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 void	ft_export(t_cmd *cmd, char **parsed, char **envp)
 {
 	int	i;
+	(void)envp;
 
 	i = 0;
 	if (ft_strcmp(parsed[0], "export") == 0 && (parsed[1] == NULL
 			|| cmd->f->re_out == 1))
 	{
-		while (envp[i])
-			printf("declare -x %s\n", envp[i++]);
+		while (cmd->cpy_env[i])
+			printf("declare -x %s\n", cmd->cpy_env[i++]);
 	}
 }
 
@@ -78,19 +79,19 @@ void	many_redir(t_cmd *cmd, int i)
 	redir_flag(cmd, i, j);
 }
 
-char	*ft_getenv(char *var, char **envp)
+char	*ft_getenv(char *var, t_cmd *cmd)
 {	
 	int i;
 	char	*name;
 	char	*cnt;
 
 	i = 0;
-	while (envp[i])
+	while (cmd->cpy_env[i])
 	{	
-		name = take_var(envp[i]);
+		name = take_var(cmd->cpy_env[i]);
 		if (ft_strcmp(name, var) == 0)
 		{
-			cnt = getcnt(envp[i], 0, 0);
+			cnt = getcnt(cmd->cpy_env[i], 0, 0);
 			return (cnt);
 			break ;
 		}
@@ -105,5 +106,5 @@ void	ft_done(t_cmd *cmd)
 	free(cmd->shell_prompt);
 	free(cmd->index);
 	free(cmd);
-	exit(0);
+	exit(g_exitstatus);
 }

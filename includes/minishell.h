@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:17 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/21 17:30:34 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:40:48 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@
 typedef struct s_var	t_var;
 typedef struct s_flags	t_flags;
 
-extern int				g_fine;
-extern char				**environ;
+extern int				g_exitstatus;
 
 typedef struct s_exe {
 	int		input_fd;
@@ -54,6 +53,7 @@ typedef struct s_int {
 typedef struct s_cmd {
 	char	*cmd;
 	char	*shell_prompt;
+	char	**cpy_env;
 	int		fine;
 	int		count;
 	int		exitstatus;
@@ -92,8 +92,11 @@ typedef struct s_flags {
 }	t_flags;
 
 void	exe_basic_cmd(char **parsed, char *command, char **envp);
+void	realloc_env(t_cmd *cmd, int i);
+void	copy_envp(t_cmd *cmd, char **envp);
+void	copy_envp2(t_cmd *cmd, char **envp, int j);
 int		check_var_loop(char **parsed);
-int		is_valid_command(const char	*string);
+int		is_valid_command(const char	*string, t_cmd *cmd);
 void	variables(t_cmd	*cmd, char	***box);
 int		is_there_more_commands(t_cmd *cmd, char **parsed);
 void	ft_strstr(t_cmd *cmd, int j, int i, char **parsed);
@@ -138,7 +141,7 @@ void	many_cmd(t_cmd *cmd, int i);
 // BUILTINS AND REDIRECTIONS
 
 void	ft_env(t_cmd *cmd, char **parsed, char **envp);
-void	ft_pwd(t_cmd *cmd);
+void	ft_pwd(void);
 void	ft_exit(t_cmd *cmd);
 int		check_cd(char **parsed);
 int		printDirectoryContents(char **parsed);
@@ -148,7 +151,7 @@ void	handle_input_redirection(char	*filename);
 void	handle_output_redirection(char	*filename);
 void	handle_input_heredoc(char	*delimiter);
 void	handle_output_append_redirection(char	*filename);
-void	ft_unset(char **parsed, char **envp);
+void	ft_unset(char **parsed, t_cmd *cmd);
 //EXE
 
 void	close_pipe_fds(int i, int num_pipes, int pipe_fds[][2]);
@@ -165,7 +168,10 @@ int		ft_putenv_ez(char *name, t_cmd *cmd);
 int		ft_putenv(char *name, char *value, t_cmd *cmd);
 void	look_var_envp(t_cmd *cmd, char **envp);
 void	up_environ(char *current);
-void	up_envp(char *current, char **envp);
+//void	up_envp(char *current, char **envp);
+void	up_envp(char *current, char **envp, t_cmd *cmd);
+void 	free_envp(t_cmd *cmd);
+void	unset_update(t_cmd *cmd, int i);
 
 // UTILS
 
@@ -191,7 +197,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len);
 void	parsing(t_cmd *cmd);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_getenv(char *var, char **envp);
+char	*ft_getenv(char *var, t_cmd *cmd);
 
 // PIPE
 void	checking_redir(t_cmd *cmd, int i);
@@ -205,7 +211,7 @@ void	set_struct(t_exe *exe, int num_pipes);
 void	error_fork(pid_t pid);
 void	many_redir(t_cmd *cmd, int i);
 int		count_redir(t_cmd *cmd, int i);
-char	*find_command_path(const char *c, char *path, char *p_e, char *dir);
+char	*find_command_path(const char *c, char *path, char *p_e, t_cmd *cmd);
 
 // LISTE VARIABILI
 t_var	*ft_lstlast(t_var *lst);
@@ -236,7 +242,7 @@ void	search_here(t_cmd *cmd);
 void	alloc_out(t_cmd *cmd, int i, int j);
 
 // BUILTINS
-int		check_echo(char **parsed, int n, t_cmd *cmd);
+int		check_echo(char **parsed, int n);
 void	echo_no_dollar(char **parsed, int n, int flag);
 void	ft_putstr(char *parsed);
 void	echo_dollar(char **parsed, int n, t_cmd *cmd, int squote);

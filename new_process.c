@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/23 10:47:37 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 17:58:41 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void	ft_strstr(t_cmd *cmd, int j, int i, char **parsed)
 	{
 		cmd->input = malloc((sizeof(char *)) * (ft_strlen(parsed[i -1]) + 1));
 		ft_strcpy(cmd->input, parsed[i -1]);
-		printf("ciao\n");
 	}
 	cmd->new_cmd[j] = NULL;
 }

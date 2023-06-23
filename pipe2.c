@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/23 10:24:49 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:28:08 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	checking_redir(t_cmd *cmd, int i)
 				}
 			}
 			else
-			{	
+			{
 				many_redir(cmd, i);
 			}
 			//i++;
@@ -66,15 +66,17 @@ void	inter_exe(t_cmd *cmd, char **envp, int i)
 {	
 	char	*path;
 
-	path = find_command_path(cmd->box[i][0], 0, 0, 0);
+	path = NULL;
+	if (check_cmds(cmd->box[i], 0) == 1)
+		path = find_command_path(cmd->box[i][0], 0, 0, cmd);
 	if (check_cmds(cmd->box[i], 0) == 1 && check_var_loop(cmd->box[i]) == 0
-		&& is_valid_command(cmd->box[i][0]) == 0)
+		&& is_valid_command(cmd->box[i][0], cmd) == 0)
 	{
 		expand_var(cmd);
 		if (ft_strchr(cmd->box[i][0], '/'))
-			execve((cmd->box[i][0]), cmd->box[i], environ);
+			execve((cmd->box[i][0]), cmd->box[i], cmd->cpy_env);
 		else
-			execve(path, cmd->box[i], environ);
+			execve(path, cmd->box[i], cmd->cpy_env);
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}

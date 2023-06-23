@@ -6,14 +6,13 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:25:23 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/23 10:59:50 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:30:04 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-extern char	**environ;
-int	g_fine;
+int g_exitstatus;
 
 void	take_input(t_cmd *cmd, char **envp)
 {
@@ -26,8 +25,10 @@ void	take_input(t_cmd *cmd, char **envp)
 	cmd->cmd = readline(cmd->shell_prompt);
 	if (cmd->cmd == NULL)
 	{	
+		if (cmd->cpy_env)
+			free_envp(cmd);
+		free(cmd->f);
 		ft_done(cmd);
-		//free_dpointer(envp);
 	}
 	if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)
 	{	
@@ -46,7 +47,7 @@ void	loop(t_cmd *cmd, char **envp)
 		take_input(cmd, envp);
 		if (cmd->cmd != NULL && ft_strlen(cmd->cmd) != 0)	
 			free_altro(cmd);
-		if (g_fine == 0)
+		if (cmd->fine == 0)
 			break ;
 	}
 }
@@ -75,12 +76,15 @@ int	main(int ac, char **av, char **envp)
 	(void) ac;
 	(void) av;
 	cmd = malloc(sizeof(t_cmd));
+	cmd->f = malloc(sizeof(t_flags));
 	cmd->index = malloc(sizeof(t_index));
-	g_fine = 1;
-	cmd->exitstatus = 0;
+	cmd->cpy_env = NULL;
+	g_exitstatus = 0;
+	cmd->fine = 1;
+	copy_envp(cmd, envp);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, signal_handler);
 	cmd->count = 0;
 	loop(cmd, envp);
-	exit(0);
+	exit(g_exitstatus);
 }

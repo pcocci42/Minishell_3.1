@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_variables1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmasetti <lmasetti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:58:54 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/08 15:21:32 by lmasetti         ###   ########.fr       */
+/*   Updated: 2023/06/23 18:27:36 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_path(char *full_path, char *dir, const char *string, char *path)
 	return (1);
 }
 
-int	is_valid_command(const char	*string)
+int	is_valid_command(const char	*string, t_cmd *cmd)
 {
 	char	*path_env;
 	char	*path;
@@ -46,7 +46,7 @@ int	is_valid_command(const char	*string)
 		return (0);
 	if (access(string, X_OK) == 0)
 		return (0);
-	path_env = getenv("PATH");
+	path_env = ft_getenv("PATH", cmd);
 	if (path_env != NULL)
 	{
 		path = ft_strdup(path_env);
@@ -80,4 +80,40 @@ void	ft_realloc(char **env)
 		i++;
 	}
 	copy[j] = NULL;
+}
+
+void	copy_envp(t_cmd *cmd, char **envp)
+{
+	int i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	cmd->cpy_env = malloc((sizeof(char *) * (i + 1)));
+	i = 0;
+	while (envp[i])
+	{ 
+		cmd->cpy_env[i] = malloc((sizeof(char)) * (ft_strlen(envp[i]) + 1));
+		ft_strcpy(cmd->cpy_env[i], envp[i]);
+		i++;
+	}
+	cmd->cpy_env[i] = NULL;
+}
+
+void	copy_envp2(t_cmd *cmd, char **envp, int j)
+{
+	int i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	cmd->cpy_env = malloc((sizeof(char *)) * (j + 1));
+	i = 0;
+	while (envp[i])
+	{ 
+		cmd->cpy_env[i] = malloc((sizeof(char)) * (ft_strlen(envp[i]) + 1));
+		ft_strcpy(cmd->cpy_env[i], envp[i]);
+		i++;
+	}
+	cmd->cpy_env[i] = NULL;
 }

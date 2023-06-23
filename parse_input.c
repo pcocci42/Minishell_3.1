@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/23 10:35:37 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 17:44:49 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,12 @@ void	ft_parse_input1(t_cmd *cmd, char **envp)
 	cmd->input = NULL;
 	add_spaces(cmd);
 	look_var(cmd, envp);
-	cmd->f = malloc(sizeof(t_flags));
-	flag_init(cmd);
+	/* if (ft_strlen(cmd->cmd) != 0)
+		cmd->f = malloc(sizeof(t_flags));
+	else
+		cmd->f = NULL; */
+	if (cmd->f)
+		flag_init(cmd);
 	look_here_doc(cmd, 0, 0);
 }
 
@@ -104,7 +108,7 @@ void	parse_input(t_cmd *cmd, char **envp)
 	if (ft_strcmp(cmd->box[0][0], "export") == 0)
 		look_var_envp(cmd, envp);
 	if (ft_strncmp(cmd->box[0][0], "unset", 5) == 0)
-		ft_unset(cmd->box[0], envp);
+		ft_unset(cmd->box[0], cmd);
 	if (ft_strcmp(cmd->box[0][0], "cd") == 0)
 	{
 		ft_cd(cmd->box[0]);
@@ -116,5 +120,6 @@ void	parse_input(t_cmd *cmd, char **envp)
 	execute_command(cmd, cmd->nbr_pipe, envp);
 	free_in_out(cmd);
 	unlink("heredoc_tmp.txt");
-	flag_init(cmd);
+	if (cmd->f)
+		flag_init(cmd);
 }

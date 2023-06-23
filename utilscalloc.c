@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 15:06:14 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/23 10:33:28 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 15:48:46 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ char	*ft_strdup(const char *s)
 	char	*str;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	j = ft_strlen(s);
 	str = (char *)malloc(sizeof(*str) * (j + 1));
 	while (i < j)

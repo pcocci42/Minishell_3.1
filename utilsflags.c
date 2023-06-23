@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:27:05 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/21 18:06:44 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 17:46:55 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	free_box(t_cmd *cmd)
 
 void	free_altro(t_cmd *cmd)
 {
-	free(cmd->f);
+	//free(cmd->f);
 	free_box(cmd);
 }
 
@@ -77,4 +77,16 @@ void	free_dpointer(char **dpoint)
 	}
 	free(dpoint[i]);
 	free(dpoint);
+}
+
+void free_envp(t_cmd *cmd)
+{
+    int i = 0;
+    while (cmd->cpy_env[i])
+    {
+        free(cmd->cpy_env[i]);
+        i++;
+    }
+    free(cmd->cpy_env);
+    cmd->cpy_env = NULL;
 }

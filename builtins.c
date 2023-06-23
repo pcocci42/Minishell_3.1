@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/21 12:51:25 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:41:02 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **envp, int flag)
 {
 	cmd->tmp = n;
 	cmd->f_echo = flag;
-	if (check_echo(cmd->parsed, n, cmd) == 1)
+	if (check_echo(cmd->parsed, n) == 1)
 		return ;
 	while (cmd->parsed[n] != 0)
 	{
@@ -42,15 +42,15 @@ void	ft_simple_echo(int n, t_cmd *cmd, char **envp, int flag)
 		n++;
 	}
 	ft_nl(cmd->tmp);
-	cmd->exitstatus = 0;
+	g_exitstatus = 0;
 }
 
 void	extra_echo(char **envp, t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->parsed[1], "$?", 2) == 0)
 	{
-		printf("%d\n", cmd->exitstatus);
-		cmd->exitstatus = 0;
+		printf("%d\n", g_exitstatus);
+		g_exitstatus = 0;
 	}
 	else
 		ft_simple_echo(1, cmd, envp, 0);
@@ -69,8 +69,8 @@ void	ft_echo(t_cmd *cmd, char **parsed, char **envp)
 		{
 			if (ft_strncmp(parsed[2], "$?", 2) == 0)
 			{
-				printf("existatus %d\n", cmd->exitstatus);
-				cmd->exitstatus = 0;
+				printf("existatus %d\n", g_exitstatus);
+				g_exitstatus = 0;
 			}
 			else
 				ft_simple_echo(2, cmd, envp, 0);
@@ -83,7 +83,7 @@ void	ft_echo(t_cmd *cmd, char **parsed, char **envp)
 void	custom_commands(t_cmd *cmd, char **parsed, char **envp)
 {
 	if (ft_strncmp(parsed[0], "pwd", 3) == 0)
-		ft_pwd(cmd);
+		ft_pwd();
 	/* if (ft_strncmp(parsed[0], "exit", 4) == 0)
 		ft_exit(cmd); */
 	ft_echo(cmd, parsed, envp);

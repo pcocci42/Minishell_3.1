@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/23 10:55:09 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:27:02 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	expand_var(t_cmd *cmd)
 		while (cmd->box[i][j])
 		{
 			if (cmd->box[i][j][0] == '$')
-				cmd->box[i][j] = getenv(cmd->box[i][j] + 1);
+				cmd->box[i][j] = ft_getenv(cmd->box[i][j] + 1, cmd);
 			j++;
 		}
 		i++;
@@ -59,12 +59,13 @@ int	check_malloc(char *full_path, char *path)
 	return (0);
 }
 
-char	*find_command_path(const char *c, char *path, char *path_env, char *dir)
+char	*find_command_path(const char *c, char *path, char *path_env, t_cmd *cmd)
 {
 	char	*full_path;
+	char *dir = NULL;
 
-	path_env = getenv("PATH");
-	path = strdup(path_env);
+	path_env = ft_getenv("PATH", cmd);
+	path = ft_strdup(path_env);
 	if (path_helper(path_env, path) == 1)
 		return (NULL);
 	dir = strtok(path, ":");

@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 14:48:05 by lmasetti          #+#    #+#             */
-/*   Updated: 2023/06/09 14:48:16 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:40:03 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ void	child_process(t_cmd *cmd, int i, int pipe_fds[i][2], char **envp)
 		close(pipe_fds[i][1]);
 }
 
-void	parent_wait(int num_pipes, t_exe *exe, t_cmd *cmd)
+void	parent_wait(int num_pipes, t_exe *exe)
 {
 	int	i;
 
 	i = 0;
 	while (i <= num_pipes)
 	{
-		waitpid(exe->pid, &cmd->exitstatus, 0);
+		waitpid(exe->pid, &g_exitstatus, 0);
 		i++;
 	}
 }
@@ -51,9 +51,9 @@ void	set_in_out(int i, int pipe_fds[i][2], t_exe *exe)
 	}
 }
 
-void	exefine(int num_pipes, t_exe *exe, t_cmd *cmd)
+void	exefine(int num_pipes, t_exe *exe)
 {
-	parent_wait(num_pipes, exe, cmd);
+	parent_wait(num_pipes, exe);
 	dup2(exe->original_stdout, STDOUT_FILENO);
 	close(exe->original_stdout);
 }
@@ -82,5 +82,5 @@ void	execute_command(t_cmd *cmd, int num_pipes, char **envp)
 			close_pipes(i, pipe_fds);
 		i++;
 	}
-	exefine(num_pipes, &cmd->exe, cmd);
+	exefine(num_pipes, &cmd->exe);
 }

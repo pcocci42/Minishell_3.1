@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:33:41 by pcocci            #+#    #+#             */
-/*   Updated: 2023/06/20 11:51:26 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:06:36 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ void	convert(t_cmd *cmd)
 }
 
 void	look_here_doc(t_cmd *cmd, int i, int j)
-{
+{	
+	int x;
+
+	x = 0;
 	while (cmd->box[i])
 	{	
 		j = 0;
@@ -81,8 +84,13 @@ void	look_here_doc(t_cmd *cmd, int i, int j)
 				else
 				{
 					j = 1;
-					while (cmd->box[i][j])
-						cmd->box[i][j] = NULL;
+					x = j;
+					while (cmd->box[i][x])
+					{
+						free(cmd->box[i][x]);
+						cmd->box[i][x] = NULL;
+						x++;
+					}
 					cmd->input = "heredoc_tmp.txt";
 					break ;
 				}

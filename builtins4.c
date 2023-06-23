@@ -6,7 +6,7 @@
 /*   By: pcocci <pcocci@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 11:41:22 by paolococci        #+#    #+#             */
-/*   Updated: 2023/06/20 13:19:25 by pcocci           ###   ########.fr       */
+/*   Updated: 2023/06/23 18:40:18 by pcocci           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@ char	*ft_putstr_quota(char *parsed)
 void	echo_dollar(char **envp, int n, t_cmd *cmd, int squote)
 {	
 	char	*env;
+	(void)envp;
 
-	env = ft_getenv(cmd->parsed[n], envp);
+	env = NULL;
+	if (cmd->cpy_env)
+		env = ft_getenv(cmd->parsed[n], cmd);
 	if (ft_strncmp(cmd->parsed[n], "-n", 2) != 0 || cmd->f_echo == 1)
 	{
 		if (squote == 0)
@@ -48,8 +51,7 @@ void	echo_dollar(char **envp, int n, t_cmd *cmd, int squote)
 		{
 			cmd->parsed[n] = ft_putstr_quota(cmd->parsed[n]);
 			cmd->parsed[n]++;
-			printf("\'%s\'", ft_getenv(cmd->parsed[n], envp));
-	 
+			printf("\'%s\'", ft_getenv(cmd->parsed[n], cmd));
 		}
 		cmd->f_echo = 1;
 		if (cmd->parsed[n + 1] != 0)
@@ -86,11 +88,11 @@ void	echo_no_dollar(char **parsed, int n, int flag)
 	}
 }
 
-int	check_echo(char **parsed, int n, t_cmd *cmd)
+int	check_echo(char **parsed, int n)
 {
 	if (!parsed && n == 1)
 	{	
-		cmd->exitstatus = 1;
+		g_exitstatus = 1;
 		return (1);
 	}
 	return (0);
