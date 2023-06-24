@@ -55,11 +55,11 @@ void	redir_flag(t_cmd *cmd, int i, int j)
 void	many_redir(t_cmd *cmd, int i)
 {
 	int	j;
-	int	len;
+	//int	len;
 	char	new_cmd[250][250];
 
 	j = 0;
-	len = ft_strlen(cmd->box[i][cmd->index->i_in - 1]);
+	//len = ft_strlen(cmd->box[i][cmd->index->i_in - 1]);
 	//cmd->new_cmd = malloc((sizeof(char *)) * (len + 1));
 	while (j < cmd->index->i_in)
 	{

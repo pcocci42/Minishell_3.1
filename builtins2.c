@@ -49,11 +49,11 @@ void	delete_content(char *str)
 void	unset_enviroment(char	*varname, char	**envp)
 {
 	int	index;
-	int	found;
+	//int	found;
 	int	i;
 
 	index = 0;
-	found = 0;
+	//found = 0;
 	while (envp[index] != NULL)
 	{
 		if (strncmp(envp[index], varname, strlen(varname)) == 0
@@ -70,7 +70,7 @@ void	unset_enviroment(char	*varname, char	**envp)
 				free(envp[i]);
 				envp[i] = NULL;
 			}
-			found = 1;
+			//found = 1;
 			break ;
 		}
 		index++;
@@ -96,33 +96,63 @@ void	unset_enviroment(char	*varname, char	**envp)
 	}
 } */
 
+void unset_variable(t_cmd* cmd, const char* variable) 
+{
+	int i;
+    int env_size = 0;
+    char** env = cmd->cpy_env;
+	//int f;
+
+    if (cmd == NULL || cmd->cpy_env == NULL || variable == NULL)
+        return;
+
+    // Count the number of environment variables
+    while (env[env_size] != NULL)
+        env_size++;
+    // Create a new environment array without the specified variable
+    char** new_env = (char**)malloc((env_size + 1) * sizeof(char*));
+    int new_env_index = 0;
+
+    for (int i = 0; i < env_size; i++) {
+        if (strncmp(env[i], variable, strlen(variable)) != 0) {
+            // Copy variables that don't match the unset variable
+            char* var_copy = strdup(env[i]);
+            if (var_copy == NULL) {
+                fprintf(stderr, "Failed to allocate memory.\n");
+                // Cleanup if memory allocation fails
+                for (int j = 0; j < new_env_index; j++)
+                    free(new_env[j]);
+                free(new_env);
+                return;
+            }
+            new_env[new_env_index] = var_copy;
+            new_env_index++;
+        }
+    }
+    new_env[new_env_index] = NULL;
+	i = 0;
+    // Free the original environment array
+    while (i < env_size)
+	{	
+		//if (i != f)
+        free(env[i]);
+		i++;
+	}
+
+    free(env);
+
+    // Update the cmd structure with the new environment array
+    cmd->cpy_env = new_env;
+}
+
 void	ft_unset(char **parsed, t_cmd *cmd)
 {
-	int		i;
 	int		j;
-	char	*var;
-	char	**envp;
 
-	i = 0;
 	j = 1;
-	envp = cmd->cpy_env;
 	while (parsed[j])
 	{
-		i = 0;
-		while (envp[i])
-		{	
-			var = take_var(envp[i]);
-			if (ft_strcmp(parsed[j], var) == 0)
-			{	
-				//unset_update(cmd, i);
-				unset_enviroment(parsed[j], envp);
-			}
-			free(var);
-			i++;
-		}
+		unset_variable(cmd, parsed[j]);
 		j++;
 	}
-	i = 0;
-	j = 1;
-	//unset_environ(parsed, i, j);
 }

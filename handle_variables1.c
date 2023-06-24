@@ -82,7 +82,7 @@ void	ft_realloc(char **env)
 	copy[j] = NULL;
 }
 
-void	copy_envp(t_cmd *cmd, char **envp)
+/* void	copy_envp(t_cmd *cmd, char **envp)
 {
 	int i;
 
@@ -98,22 +98,63 @@ void	copy_envp(t_cmd *cmd, char **envp)
 		i++;
 	}
 	cmd->cpy_env[i] = NULL;
+} */
+
+void	copy_envp(t_cmd *cmd, char **envp)
+{
+	    if (cmd == NULL || envp == NULL)
+        return;
+
+    int env_size = 0;
+    char** env = envp;
+
+    // Count the number of environment variables
+    while (env[env_size] != NULL)
+        env_size++;
+
+    // Allocate memory for the copy of the environment array
+    cmd->cpy_env = (char**)malloc((env_size + 1) * sizeof(char*));
+    if (cmd->cpy_env == NULL) {
+        fprintf(stderr, "Failed to allocate memory.\n");
+        return;
+    }
+
+    // Copy each environment variable to the new array
+    for (int i = 0; i < env_size; i++) {
+        int var_len = strlen(env[i]) + 1;
+        cmd->cpy_env[i] = (char*)malloc(var_len * sizeof(char));
+        if (cmd->cpy_env[i] == NULL) {
+            fprintf(stderr, "Failed to allocate memory.\n");
+            // Cleanup if memory allocation fails
+            for (int j = 0; j <= i; j++)
+                free(cmd->cpy_env[j]);
+            free(cmd->cpy_env);
+            return;
+        }
+        strncpy(cmd->cpy_env[i], env[i], var_len);
+    }
+
+    // Set the last element of the array to NULL
+    cmd->cpy_env[env_size] = NULL;
 }
 
 void	copy_envp2(t_cmd *cmd, char **envp, int j)
 {
 	int i;
+	//int	size;
+	char **new_env;
 
 	i = 0;
 	while (envp[i])
 		i++;
-	cmd->cpy_env = malloc((sizeof(char *)) * (j + 1));
+	new_env = malloc(sizeof(char *) * (j + 1));
 	i = 0;
-	while (envp[i])
+	while (i < j)
 	{ 
-		cmd->cpy_env[i] = malloc((sizeof(char)) * (ft_strlen(envp[i]) + 1));
-		ft_strcpy(cmd->cpy_env[i], envp[i]);
+		new_env[i] = malloc((sizeof(char)) * (ft_strlen(envp[i]) + 1));
+		ft_strcpy(new_env[i], envp[i]);
 		i++;
 	}
-	cmd->cpy_env[i] = NULL;
+	new_env[i] = NULL;
+	cmd->cpy_env = new_env;
 }
